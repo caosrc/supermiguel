@@ -123,11 +123,15 @@ class FazendaScene extends Phaser.Scene {
     }
 
     _createPlayer(height) {
-        this.player = this.physics.add.sprite(120, height - 100, 'player');
+        this.player = this.physics.add.sprite(120, height - 90, 'miguel', 1);
         this.player.setCollideWorldBounds(true);
-        this.player.setBounce(0.1);
+        this.player.setBounce(0.05);
         this.player.setDepth(10);
-        this.playerShadow = this.add.ellipse(0, 0, 30, 8, 0x000000, 0.2);
+        this.player.setScale(0.22);
+        this.player.body.setSize(100, 220, true);
+        this.player.body.setOffset(78, 150);
+        this.player.play('miguel_parado');
+        this.playerShadow = this.add.ellipse(0, 0, 36, 10, 0x000000, 0.2);
         this.playerShadow.setDepth(9);
     }
 
@@ -473,6 +477,22 @@ class FazendaScene extends Phaser.Scene {
         if (right) { vx =  (shift ? run : walk); this.player.setFlipX(false); }
         this.player.setVelocityX(vx);
         if (up && onGround) this.player.setVelocityY(-500);
+
+        // Animações do Miguel
+        if (!onGround) {
+            if (this.player.anims.currentAnim?.key !== 'miguel_pular') {
+                this.player.play('miguel_pular', true);
+            }
+        } else if (vx !== 0) {
+            const anim = shift ? 'miguel_correr' : 'miguel_andar';
+            if (this.player.anims.currentAnim?.key !== anim) {
+                this.player.play(anim, true);
+            }
+        } else {
+            if (this.player.anims.currentAnim?.key !== 'miguel_parado') {
+                this.player.play('miguel_parado', true);
+            }
+        }
 
         this.playerShadow.setPosition(this.player.x, this.player.body.bottom + 4);
 

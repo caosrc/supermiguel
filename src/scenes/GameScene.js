@@ -155,25 +155,18 @@ class GameScene extends Phaser.Scene {
     }
 
     _createPlayer(height) {
-        this.player = this.physics.add.sprite(120, height - 100, 'player');
+        this.player = this.physics.add.sprite(120, height - 90, 'miguel', 1);
         this.player.setCollideWorldBounds(true);
-        this.player.setBounce(0.1);
+        this.player.setBounce(0.05);
         this.player.setDepth(10);
+        this.player.setScale(0.22);
+        // Ajuste do corpo físico para centralizar no personagem visível
+        // Frame: 256x384, personagem ocupa ~60% central
+        this.player.body.setSize(100, 220, true);
+        this.player.body.setOffset(78, 150);
+        this.player.play('miguel_parado');
 
-        this.anims.create({
-            key: 'walk',
-            frames: [{ key: 'player' }],
-            frameRate: 8,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'idle',
-            frames: [{ key: 'player' }],
-            frameRate: 1,
-            repeat: -1
-        });
-
-        this.playerShadow = this.add.ellipse(0, 0, 30, 8, 0x000000, 0.25);
+        this.playerShadow = this.add.ellipse(0, 0, 36, 10, 0x000000, 0.25);
         this.playerShadow.setDepth(9);
     }
 
@@ -653,8 +646,8 @@ class GameScene extends Phaser.Scene {
         const onGround = this.player.body.touching.down || this.player.body.blocked.down;
 
         let vx = 0;
-        const walkSpeed  = this.playerState.onBike ? 340 : 200;
-        const runSpeed   = this.playerState.onBike ? 500 : 360;
+        const walkSpeed = this.playerState.onBike ? 340 : 200;
+        const runSpeed  = this.playerState.onBike ? 500 : 360;
 
         if (left) {
             vx = -(shift ? runSpeed : walkSpeed);
@@ -668,6 +661,22 @@ class GameScene extends Phaser.Scene {
 
         if (up && onGround) {
             this.player.setVelocityY(-520);
+        }
+
+        // Animações do Miguel
+        if (!onGround) {
+            if (this.player.anims.currentAnim?.key !== 'miguel_pular') {
+                this.player.play('miguel_pular', true);
+            }
+        } else if (vx !== 0) {
+            const anim = shift ? 'miguel_correr' : 'miguel_andar';
+            if (this.player.anims.currentAnim?.key !== anim) {
+                this.player.play(anim, true);
+            }
+        } else {
+            if (this.player.anims.currentAnim?.key !== 'miguel_parado') {
+                this.player.play('miguel_parado', true);
+            }
         }
 
         this.playerShadow.setPosition(this.player.x, this.player.body.bottom + 4);

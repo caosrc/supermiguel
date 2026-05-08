@@ -63,11 +63,12 @@ class MenuScene extends Phaser.Scene {
             ease: 'Sine.easeInOut'
         });
 
-        const miguel = this.add.image(width / 2, height - 110, 'player');
-        miguel.setScale(2.5);
+        const miguel = this.add.sprite(width / 2, height - 95, 'miguel', 5);
+        miguel.setScale(0.30);
+        miguel.play('miguel_andar');
         this.tweens.add({
             targets: miguel,
-            y: height - 120,
+            y: height - 105,
             duration: 900,
             yoyo: true,
             repeat: -1,

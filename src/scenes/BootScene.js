@@ -3,6 +3,13 @@ class BootScene extends Phaser.Scene {
         super('BootScene');
     }
 
+    preload() {
+        this.load.spritesheet('miguel', 'assets/miguel.png', {
+            frameWidth: 256,
+            frameHeight: 384
+        });
+    }
+
     create() {
         const { width, height } = this.scale;
 
@@ -10,7 +17,7 @@ class BootScene extends Phaser.Scene {
         bg.fillGradientStyle(0x1a0a2e, 0x1a0a2e, 0x0d3b5e, 0x0d3b5e, 1);
         bg.fillRect(0, 0, width, height);
 
-        const title = this.add.text(width / 2, height / 2 - 60, 'Super Miguel', {
+        const title = this.add.text(width / 2, height / 2 - 80, 'Super Miguel', {
             fontSize: '52px',
             fill: '#FFD700',
             fontStyle: 'bold',
@@ -18,14 +25,14 @@ class BootScene extends Phaser.Scene {
             strokeThickness: 6
         }).setOrigin(0.5);
 
-        const sub = this.add.text(width / 2, height / 2 + 10, 'Jogo Educativo', {
+        this.add.text(width / 2, height / 2 - 20, 'Jogo Educativo', {
             fontSize: '26px',
             fill: '#FFFFFF',
             stroke: '#333333',
             strokeThickness: 3
         }).setOrigin(0.5);
 
-        const loading = this.add.text(width / 2, height / 2 + 70, 'Carregando...', {
+        this.add.text(width / 2, height / 2 + 40, 'Carregando...', {
             fontSize: '20px',
             fill: '#AAAAAA'
         }).setOrigin(0.5);
@@ -39,7 +46,12 @@ class BootScene extends Phaser.Scene {
             repeat: -1
         });
 
-        GraphicsHelper.createPlayerSprite(this, 'player');
+        this._createAnimations();
+
+        const preview = this.add.sprite(width / 2, height / 2 + 160, 'miguel', 5);
+        preview.setScale(0.32);
+        preview.play('miguel_andar');
+
         GraphicsHelper.createNPC(this, 'pai', 0xFFD700, 0x2E8B57, 0x1a1a1a);
         GraphicsHelper.createNPC(this, 'mae', 0xFFD700, 0xFF69B4, 0x8B4513);
         GraphicsHelper.createNPC(this, 'avo', 0xFFD7A0, 0x9370DB, 0xC0C0C0);
@@ -82,8 +94,60 @@ class BootScene extends Phaser.Scene {
         GraphicsHelper.createGround(this, 'ground_farm', 0x8B4513, 3200, 40);
         GraphicsHelper.createHouse(this, 'fazenda', 0xDEB887, 0x8B6914);
 
-        this.time.delayedCall(1500, () => {
+        this.time.delayedCall(2000, () => {
             this.scene.start('MenuScene');
         });
+    }
+
+    _createAnimations() {
+        // Linha 0 (frames 0–3): parado / ângulos
+        // Linha 1 (frames 4–7): andando animado
+        // Linha 2 (frames 8–11): correndo
+        // Linha 3 (frames 12–15): pulando / abaixando / comemorando
+
+        if (!this.anims.exists('miguel_parado')) {
+            this.anims.create({
+                key: 'miguel_parado',
+                frames: this.anims.generateFrameNumbers('miguel', { frames: [1] }),
+                frameRate: 1,
+                repeat: -1
+            });
+        }
+
+        if (!this.anims.exists('miguel_andar')) {
+            this.anims.create({
+                key: 'miguel_andar',
+                frames: this.anims.generateFrameNumbers('miguel', { frames: [4, 5, 6, 7] }),
+                frameRate: 8,
+                repeat: -1
+            });
+        }
+
+        if (!this.anims.exists('miguel_correr')) {
+            this.anims.create({
+                key: 'miguel_correr',
+                frames: this.anims.generateFrameNumbers('miguel', { frames: [8, 9, 10, 11] }),
+                frameRate: 12,
+                repeat: -1
+            });
+        }
+
+        if (!this.anims.exists('miguel_pular')) {
+            this.anims.create({
+                key: 'miguel_pular',
+                frames: this.anims.generateFrameNumbers('miguel', { frames: [12] }),
+                frameRate: 1,
+                repeat: 0
+            });
+        }
+
+        if (!this.anims.exists('miguel_comemorar')) {
+            this.anims.create({
+                key: 'miguel_comemorar',
+                frames: this.anims.generateFrameNumbers('miguel', { frames: [13, 14, 15] }),
+                frameRate: 6,
+                repeat: 2
+            });
+        }
     }
 }
