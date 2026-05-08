@@ -1,0 +1,566 @@
+Projeto do jogo 2D do Miguel
+As Aventuras de Miguel
+A ideia é criar um platformer infantil bonito, colorido e com bastante variedade visual, inspirado nos clássicos 2D modernos.
+
+Estrutura dos mundos
+O segredo para o jogo parecer “grande” e bem renderizado em 2D é dividir tudo em:
+
+
+biomas
+
+
+tilesets
+
+
+objetos exclusivos
+
+
+decoração
+
+
+efeitos visuais
+
+
+mecânicas próprias
+
+
+
+🌆 MUNDO 1 — Cidade Alegre
+Tema
+Cidade colorida infantil.
+Visual
+
+
+prédios baixos
+
+
+placas luminosas
+
+
+ônibus
+
+
+parques
+
+
+postes
+
+
+semáforos
+
+
+
+Blocos da cidade
+Piso
+
+
+concreto
+
+
+asfalto
+
+
+calçada
+
+
+piso quadriculado
+
+
+Plataformas
+
+
+caixas
+
+
+caminhões
+
+
+telhados
+
+
+placas
+
+
+Objetos
+
+
+cones
+
+
+lixeiras
+
+
+hidrantes
+
+
+bancos
+
+
+Coletáveis
+
+
+estrelas
+
+
+moedas douradas
+
+
+balões
+
+
+
+Mecânicas
+
+
+elevadores
+
+
+plataformas móveis
+
+
+ônibus em movimento
+
+
+
+🌾 MUNDO 2 — Fazenda do Sol
+Tema
+Fazenda feliz e colorida.
+
+Visual
+
+
+celeiros
+
+
+cercas
+
+
+moinho
+
+
+trigo
+
+
+animais
+
+
+
+Blocos da fazenda
+Piso
+
+
+terra
+
+
+grama
+
+
+madeira
+
+
+lama
+
+
+Plataformas
+
+
+fardos de feno
+
+
+carroças
+
+
+troncos
+
+
+Objetos
+
+
+espantalhos
+
+
+vacas
+
+
+galinhas
+
+
+tratores
+
+
+
+Mecânicas
+
+
+trampolim de feno
+
+
+ponte quebrando
+
+
+lama escorregadia
+
+
+
+🌳 MUNDO 3 — Mata Encantada
+Tema
+Floresta mágica.
+
+Visual
+
+
+árvores gigantes
+
+
+cogumelos
+
+
+folhas brilhantes
+
+
+névoa
+
+
+
+Blocos do mato
+Piso
+
+
+raízes
+
+
+terra úmida
+
+
+pedras
+
+
+Plataformas
+
+
+galhos
+
+
+cipós
+
+
+folhas
+
+
+Objetos
+
+
+vagalumes
+
+
+flores gigantes
+
+
+troncos
+
+
+
+Mecânicas
+
+
+cipós
+
+
+plataformas sumindo
+
+
+vento
+
+
+
+💦 MUNDO 4 — Cachoeira Cristalina
+Tema
+Água e pedras.
+
+Visual
+
+
+cachoeiras animadas
+
+
+neblina
+
+
+arco-íris
+
+
+rios
+
+
+
+Blocos da cachoeira
+Piso
+
+
+pedras molhadas
+
+
+madeira molhada
+
+
+areia
+
+
+Plataformas
+
+
+pedras flutuantes
+
+
+troncos
+
+
+folhas gigantes
+
+
+Objetos
+
+
+peixes
+
+
+bolhas
+
+
+musgo
+
+
+
+Mecânicas
+
+
+correnteza
+
+
+água empurrando
+
+
+pulo escorregadio
+
+
+
+🏖️ MUNDO 5 — Parque das Piscinas
+Tema
+Parque aquático infantil.
+
+Visual
+
+
+toboáguas
+
+
+piscinas
+
+
+boias
+
+
+guarda-sóis
+
+
+
+Blocos da piscina
+Piso
+
+
+azulejo
+
+
+borda molhada
+
+
+deck de madeira
+
+
+Plataformas
+
+
+boias
+
+
+trampolins
+
+
+jet skis parados
+
+
+Objetos
+
+
+baldes
+
+
+bolas
+
+
+guarda-sol
+
+
+
+Mecânicas
+
+
+mergulho
+
+
+bolhas
+
+
+plataformas boiando
+
+
+
+🌋 MUNDO 6 — Vulcão de Chocolate
+Tema
+Fantasia infantil.
+
+Visual
+
+
+lava de chocolate
+
+
+biscoitos
+
+
+marshmallows
+
+
+
+Blocos
+
+
+cookies
+
+
+chocolate sólido
+
+
+wafers
+
+
+donuts
+
+
+
+Sistema de renderização 2D bonito
+Use:
+Parallax
+Camadas:
+
+
+fundo
+
+
+meio
+
+
+frente
+
+
+
+Exemplo
+Background:Montanhas lentasMidground:Árvores médiasForeground:Folhas passando
+
+Efeitos importantes
+Água animada
+Shader simples:
+
+
+brilho
+
+
+ondas
+
+
+
+Folhas caindo
+Partículas.
+
+Luz
+Glow:
+
+
+moedas
+
+
+estrelas
+
+
+checkpoints
+
+
+
+Estrutura profissional das fases
+[Início Seguro]↓[Mecânica Principal]↓[Desafio Médio]↓[Checkpoint]↓[Segredo]↓[Desafio Final]↓[Objetivo]
+
+Quantidade ideal
+Para parecer um jogo completo
+Cada mundo:
+
+
+5 fases normais
+
+
+1 secreta
+
+
+1 chefe
+
+
+
+Total
+✅ 36 fases
+
+Chefes infantis
+Cidade
+Robô aspirador gigante
+Fazenda
+Touro bravo engraçado
+Mata
+Árvore viva
+Piscina
+Polvo de boia
+
+Assets profissionais grátis
+Kenney
+Kenney Assets
+
+OpenGameArt
+OpenGameArt
+
+Engine ideal
+Godot Engine
+Godot Engine
+
+Próximo passo ideal
+Agora eu posso criar para você:
+✅ Tilesets organizados
+de cada mundo
+
+✅ Estrutura completa das 36 fases
+
+✅ Layout visual das fases
+
+✅ Código Godot completo
+
+✅ Sistema de câmera
+
+✅ Inimigos diferentes
+
+✅ Menu inicial
+
+✅ HUD infantil
+
+✅ Sistema de save
+
+✅ Mapa estilo Mario World
+
+✅ Efeitos visuais 2D modernos
+
+✅ Organização profissional de sprites e animações
