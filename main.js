@@ -11,7 +11,16 @@ const config = {
             debug: false
         }
     },
-    scene: [BootScene, MenuScene, GameScene, FazendaScene],
+    scene: [
+        BootScene,
+        MenuScene,
+        MapScene,
+        GameScene,
+        FazendaScene,
+        FlorestaScene,
+        CachoeirScene,
+        DocesScene
+    ],
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH

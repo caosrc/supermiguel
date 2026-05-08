@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Super Miguel - Jogo Educativo</title>
+    <title>Super Miguel - As Aventuras de Miguel</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,24 +11,34 @@
         <div id="game-container"></div>
         <div id="controles-touch">
             <div id="controles-esquerda">
-                <button id="btn-esquerda" class="btn-touch"></button>
-                <button id="btn-direita" class="btn-touch"></button>
+                <button id="btn-esquerda" class="btn-touch">◀</button>
+                <button id="btn-direita"  class="btn-touch">▶</button>
             </div>
             <div id="controles-direita">
-                <button id="btn-pular" class="btn-touch"></button>
-                <button id="btn-acao" class="btn-touch">⭐</button>
+                <button id="btn-pular" class="btn-touch">🔼</button>
+                <button id="btn-acao"  class="btn-touch">⭐</button>
             </div>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+
+    <!-- Utilitários e Sistemas -->
     <script src="src/utils/GraphicsHelper.js"></script>
     <script src="src/systems/SaveSystem.js"></script>
     <script src="src/systems/DialogSystem.js"></script>
     <script src="src/systems/HUDSystem.js"></script>
+
+    <!-- Cenas -->
     <script src="src/scenes/BootScene.js"></script>
     <script src="src/scenes/MenuScene.js"></script>
+    <script src="src/scenes/MapScene.js"></script>
     <script src="src/scenes/GameScene.js"></script>
     <script src="src/scenes/FazendaScene.js"></script>
+    <script src="src/scenes/FlorestaScene.js"></script>
+    <script src="src/scenes/CachoeirScene.js"></script>
+    <script src="src/scenes/DocesScene.js"></script>
+
     <script src="main.js"></script>
 </body>
 </html>

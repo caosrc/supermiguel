@@ -1,0 +1,783 @@
+Ideias de fases para o jogo do Miguel.
+Seja criativo ao criar as fases...
+As Aventuras de Miguel
+
+Cada fase tem:
+
+tema diferente
+objetos únicos
+desafios
+coletáveis
+mecânicas divertidas
+segredo escondido
+🌆 MUNDO DA CIDADE
+1. Rua das Bicicletas
+Objetos:
+bicicletas
+cones
+semáforos
+caixas
+Desafios:
+pular carros lentos
+pegar moedas nos telhados
+Segredo:
+
+balão escondido atrás de outdoor
+
+2. Parque do Escorregador
+Objetos:
+balanços
+escorregadores
+gangorras
+pneus
+Mecânica:
+
+trampolins gigantes
+
+Recompensa:
+
+estrelas coloridas
+
+3. Mercado Maluco
+Objetos:
+frutas
+carrinhos
+caixas empilhadas
+elevadores
+Desafio:
+
+subir caixas sem cair
+
+4. Ônibus Veloz
+Mecânica:
+
+fase inteira em ônibus em movimento
+
+Objetos:
+placas
+ônibus
+moedas flutuantes
+🌾 MUNDO DA FAZENDA
+5. Celeiro Saltitante
+Objetos:
+feno
+vacas
+galinhas
+tratores
+Mecânica:
+
+fardos que pulam
+
+6. Ponte do Rio
+Objetos:
+madeira quebrando
+peixes
+barcos
+Desafio:
+
+pontes caem após alguns segundos
+
+7. Campo de Milho
+Objetos:
+espantalhos
+milho gigante
+lama
+Segredo:
+
+passagem secreta no milharal
+
+🌳 MUNDO DA FLORESTA
+8. Árvore Gigante
+Objetos:
+cipós
+galhos
+folhas
+Mecânica:
+
+subir árvore enorme
+
+9. Cogumelos Mágicos
+Objetos:
+cogumelos elásticos
+flores luminosas
+Desafio:
+
+pulos altos
+
+10. Caverna Verde
+Objetos:
+cristais
+morcegos
+pedras caindo
+Mecânica:
+
+fase escura com luzes brilhantes
+
+💦 MUNDO DA CACHOEIRA
+11. Pedras Escorregadias
+Objetos:
+pedras molhadas
+água corrente
+bolhas
+Mecânica:
+
+escorregar na água
+
+12. Troncos Flutuantes
+Objetos:
+troncos
+peixes
+folhas
+Desafio:
+
+troncos afundam lentamente
+
+13. Corrida da Cachoeira
+Mecânica:
+
+água empurra Miguel
+
+Objetivo:
+
+fugir da correnteza
+
+🏖️ MUNDO DA PISCINA
+14. Parque Aquático
+Objetos:
+boias
+toboáguas
+trampolins
+Mecânica:
+
+escorregar rapidamente
+
+15. Piscina de Ondas
+Objetos:
+ondas gigantes
+bolas coloridas
+Desafio:
+
+não cair na água profunda
+
+16. Ilha Inflável
+Objetos:
+plataformas boiando
+patos de borracha
+Mecânica:
+
+plataformas balançam
+
+🍭 MUNDO FANTASIA
+17. Reino dos Doces
+Objetos:
+donuts
+chocolates
+pirulitos
+Mecânica:
+
+plataformas de marshmallow
+
+18. Castelo de Sorvete
+Objetos:
+sorvete gigante
+calda escorregadia
+Desafio:
+
+escorregar sem cair
+
+🌌 MUNDO ESPACIAL
+19. Planeta das Estrelas
+Objetos:
+foguetes
+meteoros
+estrelas
+Mecânica:
+
+gravidade reduzida
+
+🏰 FASE FINAL
+20. Castelo das Aventuras
+Mistura:
+cidade
+floresta
+água
+plataformas móveis
+Objetivo:
+
+coletar estrelas mágicas finais
+
+Recompensa:
+
+fogos de artifício e festa
+
+Objetos que deixam o jogo MUITO divertido
+Colecionáveis
+estrelas
+moedas
+cristais
+frutas
+brinquedos
+Power-ups
+Tênis turbo
+
+corre rápido
+
+Capacete
+
+protege do inimigo
+
+Mochila foguete
+
+voo curto
+
+Bolha mágica
+
+anda na água
+
+Obstáculos legais
+espinhos
+plataformas caindo
+gelo
+vento
+água empurrando
+caixas móveis
+Inimigos infantis
+robôzinho
+sapo pulador
+abelha lenta
+caracol
+peixe engraçado
+Segredos importantes
+
+Toda fase deveria ter:
+
+passagem secreta
+moedas escondidas
+área bônus
+estrela rara
+Ideia profissional de progressão
+Fácil → médio → divertido → desafio
+
+Nunca:
+
+difícil demais
+punição exagerada
+Efeitos que deixam o jogo bonito
+Visual
+partículas
+brilho
+água animada
+folhas voando
+nuvens
+Sons
+moedas
+pulos
+vitória
+inimigos engraçados
+
+🌆 EXPANSÃO DA CIDADE
+21. Telhados da Cidade
+Objetos:
+
+
+antenas
+
+
+caixas d’água
+
+
+pombos
+
+
+placas neon
+
+
+Mecânica:
+pular entre prédios altos
+Segredo:
+apartamento secreto
+
+22. Metrô Subterrâneo
+Objetos:
+
+
+trilhos
+
+
+trens
+
+
+catracas
+
+
+luzes piscando
+
+
+Desafio:
+desviar de trens em movimento
+
+23. Fábrica de Brinquedos
+Objetos:
+
+
+esteiras
+
+
+robôs
+
+
+caixas gigantes
+
+
+Mecânica:
+plataformas automáticas
+
+24. Feira da Cidade
+Objetos:
+
+
+barracas
+
+
+balões
+
+
+doces
+
+
+brinquedos
+
+
+Missão:
+coletar tickets dourados
+
+25. Chuva na Avenida
+Objetos:
+
+
+poças
+
+
+raios
+
+
+guarda-chuvas
+
+
+Mecânica:
+pisos escorregadios
+
+🌾 EXPANSÃO DA FAZENDA
+26. Fazenda do Vento
+Objetos:
+
+
+moinhos
+
+
+folhas voando
+
+
+sacos de trigo
+
+
+Mecânica:
+vento empurra Miguel
+
+27. Curral Confuso
+Objetos:
+
+
+vacas
+
+
+cercas
+
+
+lama
+
+
+Desafio:
+não ficar preso no curral
+
+28. Trem da Colheita
+Mecânica:
+fase inteira em trem andando
+Objetos:
+
+
+vagões
+
+
+milho
+
+
+caixas
+
+
+
+29. Pomar das Maçãs
+Objetos:
+
+
+árvores
+
+
+maçãs gigantes
+
+
+escadas
+
+
+Segredo:
+túnel escondido na árvore
+
+30. Celeiro Assombrado
+Objetos:
+
+
+feno
+
+
+fantasmas engraçados
+
+
+lanternas
+
+
+Mecânica:
+fase noturna
+
+🌳 EXPANSÃO DA FLORESTA
+31. Ponte dos Cipós
+Mecânica:
+balançar em cipós
+
+32. Rio da Mata
+Objetos:
+
+
+barcos
+
+
+peixes
+
+
+pedras
+
+
+Desafio:
+atravessar correnteza
+
+33. Templo Perdido
+Objetos:
+
+
+estátuas
+
+
+armadilhas
+
+
+tochas
+
+
+Segredo:
+porta secreta
+
+34. Floresta da Névoa
+Mecânica:
+visão limitada
+
+35. Bosque dos Vagalumes
+Visual:
+fase iluminada por insetos brilhantes
+
+💦 EXPANSÃO DA CACHOEIRA
+36. Lago Congelado
+Mecânica:
+gelo escorregadio
+
+37. Gruta da Água Azul
+Objetos:
+
+
+cristais
+
+
+água brilhante
+
+
+pedras
+
+
+
+38. Subida da Cachoeira
+Mecânica:
+subir contra a água
+
+39. Ponte Molhada
+Objetos:
+
+
+tábuas quebrando
+
+
+neblina
+
+
+
+40. Ilha das Tartarugas
+Objetos:
+
+
+tartarugas gigantes
+
+
+coqueiros
+
+
+Mecânica:
+usar tartarugas como plataforma
+
+🏖️ EXPANSÃO DAS PISCINAS
+41. Corrida dos Tobogãs
+Mecânica:
+alta velocidade
+
+42. Praia das Boias
+Objetos:
+
+
+boias
+
+
+ondas
+
+
+castelos de areia
+
+
+
+43. Parque das Bolhas
+Mecânica:
+bolhas levantam Miguel
+
+44. Piscina Noturna
+Visual:
+luzes coloridas e neon
+
+45. Labirinto Aquático
+Objetivo:
+achar saída escondida
+
+🍭 MUNDO DOS DOCES
+46. Estrada de Chocolate
+Objetos:
+
+
+cookies
+
+
+marshmallows
+
+
+pirulitos
+
+
+
+47. Montanha de Sorvete
+Mecânica:
+escorregar no sorvete
+
+48. Fábrica de Balas
+Objetos:
+
+
+máquinas
+
+
+chicletes
+
+
+esteiras
+
+
+
+49. Lago de Caramelo
+Mecânica:
+caramelo prende lentamente
+
+50. Castelo dos Cupcakes
+Objetivo:
+chegar ao topo
+
+🌌 MUNDO ESPACIAL
+51. Estação Espacial
+Objetos:
+
+
+portas automáticas
+
+
+lasers
+
+
+robôs
+
+
+
+52. Lua Saltitante
+Mecânica:
+gravidade baixa
+
+53. Chuva de Meteoros
+Desafio:
+desviar pedras caindo
+
+54. Nave Perdida
+Objetivo:
+ativar energia da nave
+
+55. Planeta Colorido
+Visual:
+mundo neon futurista
+
+🏰 FASES ESPECIAIS
+56. Castelo das Engrenagens
+Mecânica:
+máquinas gigantes
+
+57. Torre do Tempo
+Mecânica:
+relógios e plataformas rápidas
+
+58. Reino das Nuvens
+Objetos:
+
+
+nuvens móveis
+
+
+arco-íris
+
+
+
+59. Vulcão de Lava Azul
+Objetos:
+
+
+lava brilhante
+
+
+pedras caindo
+
+
+
+60. Grande Festival Final
+Mistura:
+TODOS os mundos juntos
+Final:
+festa enorme com fogos
+
+Como deixar as fases GRANDES
+Divida cada fase em:
+Área 1
+introdução
+Área 2
+exploração
+Área 3
+desafio principal
+Área 4
+segredo
+Área 5
+final cinematográfico
+
+Objetos extras para encher o mapa
+Decoração
+
+
+placas
+
+
+árvores
+
+
+flores
+
+
+lanternas
+
+
+carros
+
+
+pássaros
+
+
+nuvens
+
+
+
+Objetos interativos
+
+
+molas
+
+
+elevadores
+
+
+portas
+
+
+interruptores
+
+
+caixas empurráveis
+
+
+trampolins
+
+
+cordas
+
+
+
+Segredos profissionais
+Toda fase deve ter:
+✅ caminho escondido
+✅ moedas raras
+✅ área bônus
+✅ atalho
+✅ item raro
+
+Sistema de pontuação
+Ganha pontos por:
+
+
+moedas
+
+
+estrelas
+
+
+derrotar inimigos
+
+
+achar segredos
+
+
+terminar rápido
+
+
+
+Resultado final
+Com 60 fases:
+✅ jogo longo
+✅ sensação profissional
+✅ variedade gigante
+✅ muito conteúdo infantil
+✅ exploração divertida
+✅ visual rico em 2D
+✅ estilo plataforma moderno clássico
