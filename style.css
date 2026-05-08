@@ -32,48 +32,149 @@ body {
     margin: 0 auto;
 }
 
+/* =============================================
+   CONTROLES TOUCH — estilo jogo mobile
+   ============================================= */
+
 #controles-touch {
     position: fixed;
-    bottom: 20px;
+    bottom: 16px;
     left: 0;
     right: 0;
     display: flex;
     justify-content: space-between;
-    padding: 0 20px;
+    align-items: flex-end;
+    padding: 0 18px;
     pointer-events: none;
-    z-index: 100;
+    z-index: 200;
 }
 
-#controles-esquerda,
+/* Lado esquerdo: D-pad horizontal */
+#controles-esquerda {
+    display: flex;
+    gap: 6px;
+    pointer-events: auto;
+    align-items: center;
+}
+
+/* Lado direito: botões de ação empilhados verticalmente */
 #controles-direita {
     display: flex;
+    flex-direction: column;
     gap: 10px;
     pointer-events: auto;
+    align-items: center;
 }
 
+/* Base de todos os botões */
 .btn-touch {
-    width: 70px;
-    height: 70px;
     border-radius: 50%;
-    font-size: 28px;
-    background: rgba(255, 255, 255, 0.25);
-    border: 3px solid rgba(255, 255, 255, 0.5);
-    color: white;
+    border: none;
+    outline: none;
     cursor: pointer;
     touch-action: manipulation;
     user-select: none;
     -webkit-user-select: none;
-    transition: background 0.1s;
-    backdrop-filter: blur(4px);
+    -webkit-tap-highlight-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: opacity 0.08s, transform 0.08s;
 }
 
-.btn-touch:active {
-    background: rgba(255, 255, 255, 0.5);
-    transform: scale(0.95);
+/* Botões de direção (esquerda / direita) */
+#btn-esquerda,
+#btn-direita {
+    width: 72px;
+    height: 72px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 2px solid rgba(255, 255, 255, 0.12);
+    font-size: 0;
+    color: transparent;
 }
 
-@media (min-width: 768px) {
-    #controles-touch {
-        display: none;
-    }
+/* Setas desenhadas em CSS puro */
+#btn-esquerda::after {
+    content: '';
+    width: 0;
+    height: 0;
+    border-top: 13px solid transparent;
+    border-bottom: 13px solid transparent;
+    border-right: 20px solid rgba(255, 255, 255, 0.35);
+    margin-right: 4px;
+}
+
+#btn-direita::after {
+    content: '';
+    width: 0;
+    height: 0;
+    border-top: 13px solid transparent;
+    border-bottom: 13px solid transparent;
+    border-left: 20px solid rgba(255, 255, 255, 0.35);
+    margin-left: 4px;
+}
+
+/* Botão pular (em cima do de ação) */
+#btn-pular {
+    width: 76px;
+    height: 76px;
+    background: rgba(100, 220, 255, 0.08);
+    border: 2px solid rgba(100, 220, 255, 0.18);
+    font-size: 0;
+    color: transparent;
+}
+
+#btn-pular::after {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 13px solid transparent;
+    border-right: 13px solid transparent;
+    border-bottom: 20px solid rgba(100, 220, 255, 0.45);
+    margin-bottom: 4px;
+}
+
+/* Botão ação (estrela) */
+#btn-acao {
+    width: 70px;
+    height: 70px;
+    background: rgba(255, 215, 0, 0.08);
+    border: 2px solid rgba(255, 215, 0, 0.18);
+    font-size: 22px;
+    color: rgba(255, 215, 0, 0.30);
+    line-height: 1;
+}
+
+/* Estado pressionado */
+#btn-esquerda:active,
+#btn-direita:active {
+    background: rgba(255, 255, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.45);
+    transform: scale(0.93);
+}
+
+#btn-esquerda:active::after {
+    border-right-color: rgba(255, 255, 255, 0.85);
+}
+
+#btn-direita:active::after {
+    border-left-color: rgba(255, 255, 255, 0.85);
+}
+
+#btn-pular:active {
+    background: rgba(100, 220, 255, 0.28);
+    border-color: rgba(100, 220, 255, 0.55);
+    transform: scale(0.93);
+}
+
+#btn-pular:active::after {
+    border-bottom-color: rgba(100, 220, 255, 0.95);
+}
+
+#btn-acao:active {
+    background: rgba(255, 215, 0, 0.28);
+    border-color: rgba(255, 215, 0, 0.55);
+    color: rgba(255, 215, 0, 0.95);
+    transform: scale(0.93);
 }
