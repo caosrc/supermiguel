@@ -1,0 +1,2428 @@
+O jogo vai ser chamar Super Miguel
+O personagem principal é um menino que se chama Miguel, na imgame em anexo tem ele, com as hablidades dele de correr, andar e pular, seja criativo e crie mais formas de se mexer de acordo com as atividades que ele irá fazer...
+JOGO EDUCATIVO
+// VERSÃO EXPANDIDA
+// ======================================
+
+const config = {
+    type: Phaser.AUTO,
+    width: 1400,
+    height: 800,
+    parent: "game-container",
+
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 700 },
+            debug: false
+        }
+    },
+
+    scene: {
+        preload,
+        create,
+        update
+    }
+};
+
+const game = new Phaser.Game(config);
+
+// ======================================
+// VARIÁVEIS
+// ======================================
+
+let player;
+let cursors;
+
+let pai;
+let mae;
+
+let cachorro;
+let gato;
+
+let bicicleta;
+let bola;
+let pulaPula;
+let rolema;
+
+let agua;
+let suco;
+let comida;
+
+let carros;
+let lixeiras;
+let obstaculos;
+
+let casas;
+let arvores;
+let bancos;
+
+let missaoTexto;
+let pontosTexto;
+
+let pontos = 0;
+let energia = 100;
+let fase = 1;
+
+// ======================================
+// PRELOAD
+// ======================================
+
+function preload(){
+
+    // MAPA
+    this.load.image('cidade','assets/cidade.png');
+
+    // PERSONAGENS
+    this.load.spritesheet('player','assets/personagem.png',{
+        frameWidth:64,
+        frameHeight:64
+    });
+
+    this.load.image('pai','assets/pai.png');
+    this.load.image('mae','assets/mae.png');
+
+    // ANIMAIS
+    this.load.image('cachorro','assets/cachorro.png');
+    this.load.image('gato','assets/gato.png');
+
+    // OBJETOS
+    this.load.image('bicicleta','assets/bicicleta.png');
+    this.load.image('bola','assets/bola.png');
+    this.load.image('pulaPula','assets/pulapula.png');
+    this.load.image('rolema','assets/rolema.png');
+
+    // COMIDAS
+    this.load.image('agua','assets/agua.png');
+    this.load.image('suco','assets/suco.png');
+    this.load.image('comida','assets/comida.png');
+
+    // CIDADE
+    this.load.image('carro','assets/carro.png');
+    this.load.image('lixeira','assets/lixeira.png');
+    this.load.image('obstaculo','assets/obstaculo.png');
+    this.load.image('arvore','assets/arvore.png');
+    this.load.image('banco','assets/banco.png');
+    this.load.image('casa','assets/casa.png');
+}
+
+// ======================================
+// CREATE
+// ======================================
+
+function create(){
+
+    // FUNDO
+    this.add.image(700,400,'cidade');
+
+    // ======================================
+    // PLAYER
+    // ======================================
+
+    player = this.physics.add.sprite(150,600,'player');
+
+    player.setCollideWorldBounds(true);
+
+    // ======================================
+    // FAMÍLIA
+    // ======================================
+
+    pai = this.physics.add.staticImage(350,580,'pai');
+
+    mae = this.physics.add.staticImage(450,580,'mae');
+
+    // ======================================
+    // ANIMAIS
+    // ======================================
+
+    cachorro = this.physics.add.staticImage(850,620,'cachorro');
+
+    gato = this.physics.add.staticImage(1050,620,'gato');
+
+    // ======================================
+    // OBJETOS
+    // ======================================
+
+    bicicleta = this.physics.add.staticImage(600,550,'bicicleta');
+
+    bola = this.physics.add.staticImage(900,500,'bola');
+
+    pulaPula = this.physics.add.staticImage(1100,450,'pulaPula');
+
+    rolema = this.physics.add.staticImage(1300,600,'rolema');
+
+    agua = this.physics.add.staticImage(500,650,'agua');
+
+    suco = this.physics.add.staticImage(700,650,'suco');
+
+    comida = this.physics.add.staticImage(850,650,'comida');
+
+    // ======================================
+    // CARROS
+    // ======================================
+
+    carros = this.physics.add.group();
+
+    criarCarro(this,1200);
+    criarCarro(this,1600);
+    criarCarro(this,2000);
+
+    // ======================================
+    // OBSTÁCULOS
+    // ======================================
+
+    lixeiras = this.physics.add.staticGroup();
+
+    lixeiras.create(750,620,'lixeira');
+
+    obstaculos = this.physics.add.staticGroup();
+
+    obstaculos.create(950,620,'obstaculo');
+
+    // ======================================
+    // DECORAÇÃO
+    // ======================================
+
+    casas = this.add.group();
+
+    this.add.image(200,250,'casa');
+    this.add.image(600,250,'casa');
+    this.add.image(1000,250,'casa');
+
+    arvores = this.add.group();
+
+    this.add.image(300,350,'arvore');
+    this.add.image(900,350,'arvore');
+
+    bancos = this.add.group();
+
+    this.add.image(500,450,'banco');
+
+    // ======================================
+    // TEXTO
+    // ======================================
+
+    missaoTexto = this.add.text(
+        20,
+        20,
+        "Missão: caminhe pela calçada com segurança",
+        {
+            fontSize:'28px',
+            fill:'#ffffff',
+            backgroundColor:'#000'
+        }
+    );
+
+    pontosTexto = this.add.text(
+        20,
+        70,
+        "Pontos: 0 | Energia: 100",
+        {
+            fontSize:'24px',
+            fill:'#ffff00',
+            backgroundColor:'#000'
+        }
+    );
+
+    // ======================================
+    // CONTROLES
+    // ======================================
+
+    cursors = this.input.keyboard.createCursorKeys();
+
+    // ======================================
+    // COLISÕES
+    // ======================================
+
+    this.physics.add.overlap(player,pai,falarPai,null,this);
+
+    this.physics.add.overlap(player,mae,falarMae,null,this);
+
+    this.physics.add.overlap(player,cachorro,alimentarCachorro,null,this);
+
+    this.physics.add.overlap(player,gato,alimentarGato,null,this);
+
+    this.physics.add.overlap(player,agua,beberAgua,null,this);
+
+    this.physics.add.overlap(player,suco,beberSuco,null,this);
+
+    this.physics.add.overlap(player,comida,comer,null,this);
+
+    this.physics.add.overlap(player,bicicleta,andarBike,null,this);
+
+    this.physics.add.overlap(player,bola,brincarBola,null,this);
+
+    this.physics.add.overlap(player,pulaPula,pularPulaPula,null,this);
+
+    this.physics.add.overlap(player,rolema,andarRolema,null,this);
+
+    this.physics.add.collider(player,carros,baterCarro,null,this);
+
+    this.physics.add.collider(player,lixeiras,baterLixeira,null,this);
+
+    this.physics.add.collider(player,obstaculos,baterObstaculo,null,this);
+}
+
+// ======================================
+// UPDATE
+// ======================================
+
+function update(){
+
+    player.setVelocityX(0);
+
+    // ANDAR ESQUERDA
+    if(cursors.left.isDown){
+
+        player.setVelocityX(-220);
+
+        player.flipX = true;
+    }
+
+    // ANDAR DIREITA
+    if(cursors.right.isDown){
+
+        player.setVelocityX(220);
+
+        player.flipX = false;
+    }
+
+    // CORRER
+    if(cursors.shift.isDown){
+
+        if(cursors.right.isDown){
+
+            player.setVelocityX(420);
+        }
+
+        if(cursors.left.isDown){
+
+            player.setVelocityX(-420);
+        }
+    }
+
+    // PULAR
+    if(cursors.up.isDown && player.body.touching.down){
+
+        player.setVelocityY(-500);
+    }
+
+    // ABAIXAR
+    if(cursors.down.isDown){
+
+        player.setScale(0.8);
+
+    }else{
+
+        player.setScale(1);
+    }
+
+    atualizarHUD();
+}
+
+// ======================================
+// FUNÇÕES
+// ======================================
+
+function criarCarro(scene,x){
+
+    let carro = carros.create(x,650,'carro');
+
+    carro.setVelocityX(-300);
+
+    carro.setImmovable(true);
+}
+
+function falarPai(){
+
+    missaoTexto.setText(
+        "Pai: Filho, ande sempre na calçada!"
+    );
+
+    adicionarPontos(5);
+}
+
+function falarMae(){
+
+    missaoTexto.setText(
+        "Mãe: Não esqueça de beber água!"
+    );
+
+    adicionarPontos(5);
+}
+
+function alimentarCachorro(){
+
+    missaoTexto.setText(
+        "Você alimentou o cachorro!"
+    );
+
+    adicionarPontos(10);
+}
+
+function alimentarGato(){
+
+    missaoTexto.setText(
+        "Você alimentou o gato!"
+    );
+
+    adicionarPontos(10);
+}
+
+function beberAgua(){
+
+    energia += 10;
+
+    missaoTexto.setText(
+        "Muito bem! Água faz bem!"
+    );
+
+    adicionarPontos(10);
+}
+
+function beberSuco(){
+
+    energia += 5;
+
+    missaoTexto.setText(
+        "Você bebeu um suco saudável!"
+    );
+
+    adicionarPontos(8);
+}
+
+function comer(){
+
+    energia += 15;
+
+    missaoTexto.setText(
+        "Hora do almoço! Use a colher!"
+    );
+
+    adicionarPontos(15);
+}
+
+function andarBike(){
+
+    missaoTexto.setText(
+        "Você está andando de bicicleta!"
+    );
+
+    adicionarPontos(20);
+}
+
+function brincarBola(){
+
+    missaoTexto.setText(
+        "Brincar é divertido e saudável!"
+    );
+
+    adicionarPontos(10);
+}
+
+function pularPulaPula(){
+
+    player.setVelocityY(-700);
+
+    missaoTexto.setText(
+        "Pulando no pula-pula!"
+    );
+
+    adicionarPontos(10);
+}
+
+function andarRolema(){
+
+    missaoTexto.setText(
+        "Carrinho de rolemã é divertido!"
+    );
+
+    adicionarPontos(15);
+}
+
+function baterCarro(){
+
+    energia -= 20;
+
+    player.setTint(0xff0000);
+
+    missaoTexto.setText(
+        "Cuidado! Olhe antes de atravessar!"
+    );
+}
+
+function baterLixeira(){
+
+    energia -= 5;
+
+    missaoTexto.setText(
+        "Desvie das lixeiras!"
+    );
+}
+
+function baterObstaculo(){
+
+    energia -= 10;
+
+    missaoTexto.setText(
+        "Pule os obstáculos!"
+    );
+}
+
+function adicionarPontos(valor){
+
+    pontos += valor;
+}
+
+function atualizarHUD(){
+
+    pontosTexto.setText(
+        "Pontos: " + pontos +
+        " | Energia: " + energia +
+        " | Fase: " + fase
+    );
+
+    if(energia <= 0){
+
+        missaoTexto.setText(
+            "Você ficou cansado! Vá dormir cedo!"
+        );
+    }
+
+    // AVANÇAR FASES
+    if(pontos >= 50 && fase == 1){
+
+        fase = 2;
+
+        missaoTexto.setText(
+            "FASE 2: Hora de brincar no quintal!"
+        );
+    }
+
+    if(pontos >= 120 && fase == 2){
+
+        fase = 3;
+
+        missaoTexto.setText(
+            "FASE 3: Passeio no parque!"
+        );
+    }
+
+    if(pontos >= 200 && fase == 3){
+
+        fase = 4;
+
+        missaoTexto.setText(
+            "FASE 4: Hora de jantar e escovar os dentes!"
+        );
+    }
+
+    if(pontos >= 300){
+
+        fase = 5;
+
+        missaoTexto.setText(
+            "Parabéns! Agora vá dormir cedo!"
+        );
+    }
+}
+
+1. MAPA COMPLETO DA CIDADE MINEIRA
+O mapa terá:
+praça
+igreja
+escola
+mercadinho
+casas
+ruas
+calçadas
+parque
+lago
+quadra
+árvores
+postes
+lixeiras
+Sistema de mapa grande
+CidadeScene.js
+class CidadeScene extends Phaser.Scene {
+
+    constructor(){
+        super("CidadeScene");
+    }
+
+    preload(){
+
+        this.load.image('tiles','assets/cidade/tiles.png');
+
+        this.load.tilemapTiledJSON(
+            'mapa',
+            'assets/cidade/mapa.json'
+        );
+
+    }
+
+    create(){
+
+        const mapa = this.make.tilemap({
+            key:'mapa'
+        });
+
+        const tileset = mapa.addTilesetImage(
+            'tiles',
+            'tiles'
+        );
+
+        const chao = mapa.createLayer(
+            'Chao',
+            tileset
+        );
+
+        const ruas = mapa.createLayer(
+            'Ruas',
+            tileset
+        );
+
+        const casas = mapa.createLayer(
+            'Casas',
+            tileset
+        );
+
+        ruas.setCollisionByProperty({
+            collider:true
+        });
+
+        player = this.physics.add.sprite(
+            400,
+            300,
+            'player'
+        );
+
+        this.physics.add.collider(
+            player,
+            ruas
+        );
+
+        this.cameras.main.startFollow(player);
+
+        this.cameras.main.setZoom(2);
+
+    }
+}
+Melhor editor de mapa
+
+Use:
+Tiled Map Editor
+
+Você cria:
+
+ruas
+casas
+árvores
+escolas
+bairros
+
+igual jogo profissional.
+
+2. SISTEMA DE FASES
+Fases educativas
+Fase	Objetivo
+1	andar na calçada
+2	atravessar rua
+3	alimentar animais
+4	brincar no parque
+5	escola
+6	higiene
+7	alimentação
+8	dormir cedo
+Sistema
+let faseAtual = 1;
+
+function avancarFase(){
+
+    faseAtual++;
+
+    switch(faseAtual){
+
+        case 2:
+            mostrarMensagem(
+                "Olhe os carros antes de atravessar!"
+            );
+        break;
+
+        case 3:
+            mostrarMensagem(
+                "Hora de alimentar os animais!"
+            );
+        break;
+
+        case 4:
+            mostrarMensagem(
+                "Vamos brincar no parque!"
+            );
+        break;
+    }
+}
+3. CELULAR TOUCH
+Botões na tela
+<div id="controles">
+
+  <button id="esquerda">◀</button>
+
+  <button id="direita">▶</button>
+
+  <button id="pular">⬆</button>
+
+  <button id="acao">⭐</button>
+
+</div>
+CSS
+#controles{
+
+    position:fixed;
+    bottom:20px;
+    width:100%;
+
+}
+
+button{
+
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    font-size:35px;
+}
+JavaScript
+let moverDireita = false;
+
+document
+.getElementById("direita")
+.addEventListener("touchstart",()=>{
+
+    moverDireita = true;
+
+});
+
+document
+.getElementById("direita")
+.addEventListener("touchend",()=>{
+
+    moverDireita = false;
+
+});
+4. INVENTÁRIO
+Sistema de mochila
+let inventario = [];
+
+function pegarItem(item){
+
+    inventario.push(item);
+
+    atualizarInventario();
+}
+
+function atualizarInventario(){
+
+    console.log(inventario);
+}
+Itens
+água
+pão
+bola
+brinquedos
+comida do cachorro
+bicicleta
+5. LOJA
+Mercadinho da cidade
+
+O menino pode:
+
+comprar água
+comprar comida
+comprar brinquedos
+comprar ração
+Código
+let moedas = 100;
+
+function comprar(item,valor){
+
+    if(moedas >= valor){
+
+        moedas -= valor;
+
+        inventario.push(item);
+
+    }
+}
+6. ESCOLA
+Aulas educativas
+
+Pode ensinar:
+
+trânsito
+higiene
+reciclagem
+respeito
+animais
+NPC Professora
+function falarProfessora(){
+
+    mostrarMensagem(
+        "Sempre atravesse na faixa!"
+    );
+}
+7. PERSONAGENS CONVERSANDO
+Sistema de diálogo
+function mostrarMensagem(texto){
+
+    caixaDialogo.setVisible(true);
+
+    caixaDialogo.setText(texto);
+
+}
+NPCs
+pai
+mãe
+professora
+amigos
+vizinhos
+vendedor
+guarda de trânsito
+8. IA DOS CARROS
+Carros inteligentes
+function update(){
+
+    carros.children.iterate(function(carro){
+
+        carro.x -= 3;
+
+        if(carro.x < -100){
+
+            carro.x = 2000;
+        }
+
+    });
+
+}
+Melhorias
+parar no sinal
+buzinar
+evitar pedestre
+velocidades diferentes
+9. CACHORRO SEGUINDO O MENINO
+function update(){
+
+    this.physics.moveToObject(
+        cachorro,
+        player,
+        120
+    );
+
+}
+10. SISTEMA DE FOME E SONO
+let fome = 100;
+let sono = 100;
+
+function update(){
+
+    fome -= 0.01;
+
+    sono -= 0.005;
+
+    if(fome <= 20){
+
+        mostrarMensagem(
+            "Você está com fome!"
+        );
+    }
+
+    if(sono <= 20){
+
+        mostrarMensagem(
+            "Está com sono!"
+        );
+    }
+}
+11. SAVE AUTOMÁTICO
+Salvando progresso
+function salvarJogo(){
+
+    const dados = {
+
+        pontos:pontos,
+        fase:faseAtual,
+        moedas:moedas
+
+    };
+
+    localStorage.setItem(
+        "saveJogo",
+        JSON.stringify(dados)
+    );
+}
+Carregar save
+function carregarJogo(){
+
+    const save = JSON.parse(
+        localStorage.getItem("saveJogo")
+    );
+
+    if(save){
+
+        pontos = save.pontos;
+
+        faseAtual = save.fase;
+    }
+}
+12. GRÁFICOS MAIS BONITOS
+Melhor estilo
+
+Você pode usar:
+
+Pixel Art HD
+
+ou
+
+Cartoon 2D
+Assets profissionais grátis
+Tilesets
+
+Kenney Assets
+
+Sprites
+
+itch.io Assets
+
+Pixel Art
+
+OpenGameArt
+
+Efeitos visuais
+
+Você pode adicionar:
+
+sombra
+chuva
+neblina
+luz do sol
+noite
+vento
+folhas mexendo
+fumaça dos carros
+SISTEMA COMPLETO FUTURO
+
+Depois você pode adicionar:
+
+Multiplayer
+crianças brincando juntas
+Android
+transformar em APK
+Sons
+passarinhos
+cachorro
+igreja
+chuva
+Narrador
+voz ensinando
+Missões aleatórias
+levar pão
+ajudar vizinho
+passear cachorro
+Sistema de amizade
+amigos da escola
+Clima dinâmico
+chuva
+frio
+noite
+Melhor caminho agora
+PRIMEIRO:
+
+✅ movimento
+✅ mapa
+✅ NPCs
+✅ missões
+
+SEGUNDO:
+
+✅ inventário
+✅ escola
+✅ diálogos
+
+TERCEIRO:
+
+✅ save
+✅ celular
+✅ gráficos melhores
+
+QUARTO:
+
+✅ mundo aberto completo
+✅ várias fases
+✅ sons
+✅ APK Android
+
+colocar tomar remedio também
+
+Sim. Você pode colocar um sistema educativo de remédio no jogo, ensinando:
+
+tomar remédio no horário certo
+beber água junto
+pedir ajuda da mãe/pai
+não tomar sozinho
+descansar
+melhorar da gripe/febre
+
+Isso combina muito com o estilo didático do seu jogo.
+
+Sistema de saúde do menino
+Novas barras
+let saude = 100;
+let febre = false;
+let gripe = false;
+Objetos novos
+
+Adicione nas imagens:
+
+this.load.image('remedio','assets/remedio.png');
+
+this.load.image('cama','assets/cama.png');
+
+this.load.image('termometro','assets/termometro.png');
+Criando os objetos
+let remedio = this.physics.add.staticImage(
+    900,
+    500,
+    'remedio'
+);
+
+let cama = this.physics.add.staticImage(
+    1200,
+    500,
+    'cama'
+);
+
+let termometro = this.physics.add.staticImage(
+    700,
+    500,
+    'termometro'
+);
+Sistema de doença
+Exemplo educativo
+function ficarDoente(){
+
+    gripe = true;
+
+    saude -= 30;
+
+    mostrarMensagem(
+        "Você ficou gripado! Vá descansar."
+    );
+}
+Tomar remédio
+function tomarRemedio(){
+
+    if(gripe){
+
+        gripe = false;
+
+        saude += 20;
+
+        mostrarMensagem(
+            "Muito bem! Tome remédio com ajuda dos pais."
+        );
+
+        adicionarPontos(15);
+    }
+}
+Colisão com remédio
+this.physics.add.overlap(
+    player,
+    remedio,
+    tomarRemedio,
+    null,
+    this
+);
+Dormir na cama
+function dormir(){
+
+    energia = 100;
+
+    sono = 100;
+
+    mostrarMensagem(
+        "Boa noite! Dormir faz bem para a saúde."
+    );
+
+    adicionarPontos(20);
+}
+Sistema educativo dos pais
+Pai e mãe ajudam
+function falarMae(){
+
+    if(gripe){
+
+        mostrarMensagem(
+            "Mamãe: Vamos tomar o remédio certinho."
+        );
+
+    }else{
+
+        mostrarMensagem(
+            "Mamãe: Não esqueça de escovar os dentes!"
+        );
+    }
+}
+Farmácia da cidade
+
+Você pode criar:
+
+farmácia
+posto de saúde
+médico
+enfermeira
+Missões educativas
+Exemplos
+Missão	Objetivo
+Gripe	tomar remédio
+Febre	usar termômetro
+Sono	dormir cedo
+Sede	beber água
+Higiene	lavar mãos
+Sistema de horário
+Dia e noite
+let hora = 8;
+
+function update(){
+
+    hora += 0.001;
+
+    if(hora >= 22){
+
+        mostrarMensagem(
+            "Está tarde! Hora de dormir."
+        );
+    }
+}
+Sistema completo de saúde
+Barras
+
+Você pode ter:
+
+saúde
+fome
+sede
+sono
+felicidade
+higiene
+Exemplo HUD
+hud.setText(
+
+"Saúde: " + saude +
+"\nFome: " + fome +
+"\nSono: " + sono +
+"\nEnergia: " + energia
+
+);
+Coisas educativas legais
+
+Você pode ensinar:
+
+✅ beber água
+✅ tomar remédio corretamente
+✅ pedir ajuda aos pais
+✅ dormir cedo
+✅ comer saudável
+✅ cuidar dos animais
+✅ atravessar rua
+✅ brincar com segurança
+
+Ideias futuras
+Consultório médico
+medir febre
+ouvir coração
+vacina
+vitamina
+Higiene
+lavar mãos
+banho
+escovar dentes
+Alimentação
+frutas
+verduras
+evitar excesso de doces
+Sons legais
+
+Você pode colocar:
+
+mãe falando
+cachorro latindo
+passarinho
+chuva
+música tranquila
+ambulância
+bicicleta
+
+NOVA EXPANSÃO DO JOGO
+“Menino da Cidade Mineira”
+
+Agora o jogo terá:
+
+2 cidades de Minas Gerais
+viagem para visitar os avós
+família grande
+novos personagens
+novas missões
+novas brincadeiras
+novas habilidades
+desafios educativos
+CIDADES DO JOGO
+Cidade 1
+
+Lagoa Dourada
+
+A cidade principal:
+
+casa do menino
+escola
+praça
+parque
+mercadinho
+ruas pequenas
+brincadeiras
+trânsito educativo
+Cidade 2
+
+Resende Costa
+
+Cidade dos avós paternos:
+
+fazenda pequena
+ruas históricas
+praças
+igreja
+feira
+quintal dos avós
+galinhas
+cachorro da fazenda
+bicicleta na terra
+carrinho de rolemã nas ladeiras
+NOVOS PERSONAGENS
+Família
+Personagem	Função
+Pai	ensina trânsito
+Mãe	saúde e alimentação
+Avô João	histórias antigas
+Avó Maria	comida mineira
+Tio Pedro	brincadeiras
+Tia Ana	ajuda nas tarefas
+Primo Lucas	futebol
+Prima Sofia	bicicleta
+Cachorro Bidu	segue o menino
+Gato Mingau	aparece na fazenda
+NOVAS FASES
+FASE 6 — VIAGEM PARA RESENDE COSTA
+Objetivos
+arrumar mochila
+levar água
+entrar no carro
+colocar cinto
+viajar com segurança
+Código
+function iniciarViagem(){
+
+    mostrarMensagem(
+        "Vamos visitar os avós em Resende Costa!"
+    );
+
+    faseAtual = 6;
+}
+FASE 7 — CHEGANDO NA CASA DOS AVÓS
+Objetivos
+cumprimentar os avós
+guardar mochila
+ajudar a avó
+brincar no quintal
+Avós conversando
+function falarAvo(){
+
+    mostrarMensagem(
+        "Avó Maria: Fiz pão de queijo fresquinho!"
+    );
+}
+
+function falarAvoJoao(){
+
+    mostrarMensagem(
+        "Avô João: Vamos cuidar das galinhas!"
+    );
+}
+FASE 8 — AJUDAR NA FAZENDA
+Missões
+alimentar galinhas
+dar água aos animais
+recolher frutas
+fechar porteira
+Sistema de animais
+this.load.image('galinha','assets/galinha.png');
+
+let galinhas = this.physics.add.group();
+
+galinhas.create(700,500,'galinha');
+FASE 9 — PASSEIO PELA CIDADE
+Objetivos
+andar nas ruas históricas
+atravessar com cuidado
+visitar a praça
+comprar doce mineiro
+NOVOS OBJETOS
+this.load.image('igreja','assets/igreja.png');
+
+this.load.image('praca','assets/praca.png');
+
+this.load.image('padaria','assets/padaria.png');
+
+this.load.image('onibus','assets/onibus.png');
+
+this.load.image('fazenda','assets/fazenda.png');
+FASE 10 — BRINCADEIRAS COM OS PRIMOS
+Novas brincadeiras
+pique-esconde
+futebol
+bicicleta
+empinar pipa
+carrinho de rolemã
+Futebol
+function jogarFutebol(){
+
+    adicionarPontos(20);
+
+    mostrarMensagem(
+        "Você jogou bola com os primos!"
+    );
+}
+NOVAS HABILIDADES
+Habilidade	Descrição
+Pedalar rápido	bicicleta melhor
+Pular alto	obstáculos
+Conversar	NPCs
+Ajudar família	ganha pontos
+Cuidar animais	aumenta amizade
+Descansar	recupera energia
+SISTEMA DE AMIZADE
+Família feliz
+let amizadeFamilia = 0;
+
+function ajudarFamilia(){
+
+    amizadeFamilia += 10;
+
+    mostrarMensagem(
+        "Sua família ficou feliz!"
+    );
+}
+NOVOS DESAFIOS
+Em Resende Costa
+Desafios educativos
+atravessar ruas estreitas
+andar na praça
+ajudar idosos
+respeitar animais
+organizar brinquedos
+beber água no calor
+NOVOS MAPAS
+Lagoa Dourada
+bairro
+escola
+praça
+parque
+Resende Costa
+fazenda
+centro histórico
+praça
+igreja
+feira
+TROCA DE CIDADE
+function trocarCidade(cidade){
+
+    this.scene.start(cidade);
+}
+NOVOS VEÍCULOS
+Veículo	Uso
+bicicleta	parque
+carrinho de rolemã	ladeiras
+ônibus	viagem
+carro do pai	visitar avós
+SISTEMA DE CLIMA
+let clima = "sol";
+
+function mudarClima(){
+
+    const climas = [
+        "sol",
+        "chuva",
+        "nublado"
+    ];
+
+    clima = climas[
+        Math.floor(Math.random()*3)
+    ];
+}
+MISSÕES DOS AVÓS
+Avó
+ajudar cozinha
+levar pão
+regar plantas
+Avô
+cuidar animais
+arrumar quintal
+contar histórias
+CUTSCENE DE VIAGEM
+Tela animada
+function viagemCutscene(){
+
+    mostrarMensagem(
+        "Viajando para Resende Costa..."
+    );
+
+}
+NOVAS MÚSICAS
+
+Você pode colocar:
+
+viola mineira
+passarinhos
+som de fazenda
+chuva
+praça da cidade
+SISTEMA DE DIA E NOITE
+if(hora >= 18){
+
+    escurecerMapa();
+}
+SISTEMA DE TAREFAS
+Quadro de tarefas
+let tarefas = [
+
+ "escovar dentes",
+ "beber água",
+ "alimentar cachorro",
+ "ajudar avó"
+
+];
+OBJETIVO FINAL DO JOGO
+
+Ensinar:
+
+educação
+família
+segurança
+saúde
+amizade
+respeito
+vida simples do interior
+ESTILO VISUAL RECOMENDADO
+Melhor opção:
+pixel art HD
+cores quentes
+cidade mineira acolhedora
+ASSETS IDEAIS
+Tilesets
+
+Kenney Assets
+
+Pixel Art
+
+OpenGameArt
+
+Sprites NPC
+
+itch.io Assets
+
+FUTURAMENTE
+
+Você pode adicionar:
+
+✅ escola completa
+✅ feira da cidade
+✅ pescaria
+✅ festas juninas
+✅ cavalo
+✅ horta
+✅ plantar árvores
+✅ coleta seletiva
+✅ ônibus escolar
+✅ sistema de amizade
+✅ mini games
+✅ APK Android
+✅ multiplayer local
+✅ narração em português brasileiro
+
+NOVAS ATIVIDADES DO MENINO
+Sistema de viagens, conforto e diversão
+
+Agora o menino:
+
+gosta de viajar
+se sente confortável no carro e ônibus
+aprende durante as viagens
+faz atividades divertidas
+descobre novas cidades
+ganha experiências
+
+Isso deixa o jogo mais vivo, acolhedor e educativo.
+
+SISTEMA DE CONFORTO
+Barra emocional
+let conforto = 100;
+let felicidade = 100;
+Lugares confortáveis
+Lugar	Efeito
+carro do pai	conforto
+ônibus	diversão
+casa dos avós	felicidade
+praça	energia
+parque	diversão
+cama	descanso
+VIAJAR DE CARRO
+Atividades dentro do carro
+
+O menino pode:
+
+ouvir música
+olhar paisagem
+conversar com os pais
+beber água
+dormir
+contar caminhões
+ver montanhas
+Sistema de viagem
+function viajarCarro(){
+
+    conforto += 15;
+
+    felicidade += 10;
+
+    mostrarMensagem(
+        "Você está viajando confortável com sua família!"
+    );
+
+}
+CUTSCENE DE VIAGEM
+Estrada mineira
+function iniciarEstrada(){
+
+    mostrarMensagem(
+        "Passando pelas montanhas de Minas Gerais..."
+    );
+
+}
+CENÁRIOS DA VIAGEM
+
+Durante a estrada aparecem:
+
+montanhas
+vacas
+igrejinhas
+rios
+plantações
+caminhões
+postos de gasolina
+placas
+VIAJAR DE ÔNIBUS
+Novas experiências
+
+No ônibus ele pode:
+
+olhar pela janela
+conversar com passageiros
+dormir
+ouvir histórias
+observar cidades
+Sistema
+function viajarOnibus(){
+
+    felicidade += 20;
+
+    mostrarMensagem(
+        "Você viajou de ônibus e conheceu novas paisagens!"
+    );
+}
+NOVOS PERSONAGENS NO ÔNIBUS
+Personagem	Função
+Motorista	segurança
+Senhora idosa	conversa
+Criança	amizade
+Cobrador	interação
+Turista	curiosidades
+SISTEMA DE DESCOBERTA
+Lugares novos
+let lugaresVisitados = [];
+
+function descobrirLugar(nome){
+
+    lugaresVisitados.push(nome);
+
+    adicionarPontos(20);
+
+}
+NOVAS ATIVIDADES LEGAIS
+PRAÇA DA CIDADE
+O menino pode:
+brincar
+correr
+alimentar passarinhos
+tomar sorvete
+andar de bicicleta
+PARQUE
+Atividades:
+escorregador
+balanço
+gangorra
+pula-pula
+corrida
+CASA DOS AVÓS
+Atividades:
+ajudar na cozinha
+fazer bolo
+ouvir histórias
+brincar no quintal
+cuidar das plantas
+MINIGAMES
+CONTAR CARROS
+let carrosContados = 0;
+
+function contarCarro(){
+
+    carrosContados++;
+
+    adicionarPontos(2);
+}
+JOGO DA JANELA
+
+O menino ganha pontos ao:
+
+observar animais
+encontrar placas
+descobrir igrejas
+TIRAR FOTOS
+Sistema de câmera
+function tirarFoto(local){
+
+    adicionarPontos(10);
+
+    mostrarMensagem(
+        "Foto salva da viagem!"
+    );
+}
+ÁLBUM DE VIAGENS
+
+O jogo salva:
+
+cidades visitadas
+fotos
+lugares favoritos
+NOVOS OBJETOS
+this.load.image('onibus','assets/onibus.png');
+
+this.load.image('mala','assets/mala.png');
+
+this.load.image('placa','assets/placa.png');
+
+this.load.image('montanha','assets/montanha.png');
+
+this.load.image('posto','assets/posto.png');
+SISTEMA DE DESCANSO
+Dormir na viagem
+function descansar(){
+
+    energia = 100;
+
+    sono = 100;
+
+    mostrarMensagem(
+        "Você descansou durante a viagem."
+    );
+}
+COMIDAS DA VIAGEM
+
+Ele pode:
+
+pão de queijo
+biscoito
+suco
+água
+frutas
+SISTEMA DE EDUCAÇÃO NA ESTRADA
+O pai ensina:
+function ensinarEstrada(){
+
+    mostrarMensagem(
+        "Pai: Sempre use cinto de segurança!"
+    );
+}
+NOVAS HABILIDADES
+Habilidade	Benefício
+observação	encontra objetos
+educação	ajuda NPCs
+energia	corre mais
+amizade	desbloqueia diálogos
+coragem	novas áreas
+CLIMA NA VIAGEM
+Eventos aleatórios
+chuva
+pôr do sol
+neblina
+arco-íris
+SISTEMA DE MEMÓRIAS
+let memorias = [];
+
+function criarMemoria(texto){
+
+    memorias.push(texto);
+}
+EXEMPLOS
+“Primeira viagem para Resende Costa”
+“Brincou com os primos”
+“Andou de ônibus”
+“Dormiu na casa dos avós”
+NOVAS FASES
+Fase	Nome
+11	viagem de carro
+12	viagem de ônibus
+13	passeio na praça
+14	feira da cidade
+15	passeio na chuva
+16	piquenique
+17	passeio no interior
+FEIRA DA CIDADE
+O menino pode:
+comprar frutas
+conversar
+ajudar avó
+conhecer pessoas
+FESTAS
+Eventos especiais
+festa junina
+natal
+aniversário
+festa da escola
+SISTEMA DE RECOMPENSAS
+Medalhas
+let medalhas = [
+
+ "Bom Amigo",
+ "Ajudante",
+ "Criança Educada",
+ "Viajante"
+
+];
+FINAL DO JOGO
+
+O menino:
+
+aprende a cuidar da saúde
+respeitar pessoas
+amar a família
+viajar com segurança
+cuidar dos animais
+brincar com responsabilidade
+
+EXPANSÃO GIGANTE DO JOGO
+“Menino da Cidade Mineira”
+
+Agora o jogo vira um grande mundo educativo de aventuras em Minas Gerais.
+
+NOVOS SISTEMAS
+✅ estação rodoviária
+✅ hotel
+✅ mapa mundial
+✅ novas cidades mineiras
+✅ trem
+✅ pescaria
+✅ acampamento
+✅ fogueira
+✅ trilhas
+✅ cachoeiras
+✅ fazenda completa
+✅ escola grande
+✅ animais selvagens
+✅ sistema de temporadas
+✅ multiplayer familiar
+1. ESTAÇÃO RODOVIÁRIA
+Nova área da cidade
+
+A rodoviária terá:
+
+ônibus
+passageiros
+bancos
+lanchonete
+banheiro
+guichê
+placas
+Sistema de viagens
+function viajar(cidade){
+
+    mostrarMensagem(
+        "Viajando para " + cidade
+    );
+
+    trocarCidade(cidade);
+}
+Ônibus interativo
+O menino pode:
+comprar passagem
+esperar ônibus
+conversar com passageiros
+escolher janela
+2. HOTEL
+Sistema de hospedagem
+
+O menino pode:
+
+dormir
+tomar banho
+assistir TV
+descansar
+Código
+function entrarHotel(){
+
+    energia = 100;
+
+    sono = 100;
+
+    mostrarMensagem(
+        "Você descansou no hotel!"
+    );
+}
+3. MAPA MUNDIAL
+Tela de mapa
+let cidades = [
+
+ "Lagoa Dourada",
+ "Resende Costa",
+ "São João del-Rei",
+ "Tiradentes"
+
+];
+Sistema de desbloqueio
+function desbloquearCidade(nome){
+
+    cidadesVisitadas.push(nome);
+}
+4. NOVAS CIDADES MINEIRAS
+Cidades futuras
+Cidade	Atividade
+São João del-Rei	trem
+Tiradentes	turismo
+Ouro Preto	história
+Congonhas	arte
+Lavras	fazenda
+5. TREM
+Passeio educativo
+
+O menino pode:
+
+viajar de trem
+ver montanhas
+ouvir histórias
+aprender história de Minas
+Código
+function viajarTrem(){
+
+    felicidade += 20;
+
+    mostrarMensagem(
+        "Você está viajando de trem!"
+    );
+}
+6. PESCARIA
+Minigame
+
+O menino:
+
+pesca com o avô
+aprende paciência
+devolve peixes pequenos
+Sistema
+function pescar(){
+
+    adicionarPontos(15);
+
+    mostrarMensagem(
+        "Você pescou um peixe!"
+    );
+}
+7. ACAMPAMENTO
+Atividades
+montar barraca
+cozinhar
+observar estrelas
+ouvir histórias
+Barraca
+this.load.image(
+    'barraca',
+    'assets/barraca.png'
+);
+8. FOGUEIRA
+Sistema noturno
+function acenderFogueira(){
+
+    mostrarMensagem(
+        "A fogueira deixou todos aquecidos!"
+    );
+
+    energia += 10;
+}
+9. TRILHAS
+Aventuras
+
+O menino pode:
+
+andar na mata
+observar pássaros
+subir morros
+encontrar cachoeiras
+Sistema
+function explorarTrilha(){
+
+    adicionarPontos(25);
+
+    mostrarMensagem(
+        "Você explorou a trilha!"
+    );
+}
+10. CACHOEIRAS
+Área especial
+
+Atividades:
+
+nadar
+tirar fotos
+piquenique
+descansar
+Água animada
+function entrarCachoeira(){
+
+    felicidade += 30;
+
+    mostrarMensagem(
+        "A água da cachoeira está refrescante!"
+    );
+}
+11. FAZENDA COMPLETA
+Novos animais
+Animal	Função
+vaca	leite
+cavalo	passeio
+galinha	ovos
+pato	lago
+porco	fazenda
+Sistema de cuidar animais
+function cuidarAnimal(){
+
+    amizadeAnimais += 5;
+
+    adicionarPontos(10);
+}
+12. ESCOLA GRANDE
+Novas salas
+matemática
+leitura
+ciências
+informática
+artes
+Professores
+function aulaCiencias(){
+
+    mostrarMensagem(
+        "As plantas precisam de água e sol!"
+    );
+}
+13. ANIMAIS SELVAGENS
+Na mata
+Animal	Tipo
+tucano	pássaro
+capivara	rio
+macaco	floresta
+tatu	trilha
+Sistema educativo
+function observarAnimal(){
+
+    adicionarPontos(15);
+
+    mostrarMensagem(
+        "Observe os animais sem assustá-los!"
+    );
+}
+14. SISTEMA DE TEMPORADAS
+Estações
+Temporada	Mudanças
+verão	calor
+inverno	frio
+chuva	tempestades
+primavera	flores
+Código
+let temporada = "verao";
+
+function mudarTemporada(){
+
+    const lista = [
+
+        "verao",
+        "inverno",
+        "chuva",
+        "primavera"
+
+    ];
+
+    temporada = lista[
+        Math.floor(Math.random()*4)
+    ];
+}
+EFEITOS VISUAIS
+Verão
+céu forte
+cigarras
+Chuva
+gotas
+trovões
+Inverno
+neblina
+Primavera
+flores
+15. MULTIPLAYER FAMILIAR
+Sistema local
+
+Pode jogar:
+
+irmão
+primo
+amigo
+Player 2
+let player2;
+
+player2 = this.physics.add.sprite(
+    500,
+    500,
+    'primo'
+);
+Atividades multiplayer
+futebol
+bicicleta
+pescaria
+pega-pega
+trilha
+CHAT SIMPLES
+function enviarMensagem(texto){
+
+    console.log(texto);
+}
+NOVOS EVENTOS
+Eventos especiais
+festa junina
+desfile escolar
+campeonato
+passeio ecológico
+SISTEMA DE CONQUISTAS
+let conquistas = [
+
+ "Aventureiro",
+ "Bom Neto",
+ "Amigo dos Animais",
+ "Explorador",
+ "Campeão da Escola"
+
+];
+GRÁFICOS MAIS BONITOS
+Recomendado:
+Pixel Art HD
+iluminação dinâmica
+sombras suaves
+partículas
+EFEITOS
+this.add.particles(
+    'folha'
+);
+
+GUIA COMPLETO PARA CRIAR O JOGO
+
+Você vai montar um jogo grande estilo:
+
+aventura educativa
+cidades mineiras
+família
+viagens
+mundo aberto 2D
+
+A melhor combinação é:
+
+Ferramenta	Uso
+Tiled Map Editor
+	criar mapas
+itch.io Assets
+	personagens e sprites
+Kenney Assets
+	tiles e objetos
+Replit
+	programar o jogo
+PASSO 1 — CRIAR O PROJETO NO REPLIT
+Crie:
+HTML/CSS/JS
+Estrutura ideal
+MeuJogo/
+
+assets/
+├── mapas/
+├── personagens/
+├── animais/
+├── tiles/
+├── sons/
+├── musicas/
+├── objetos/
+
+scenes/
+├── MenuScene.js
+├── LagoaDouradaScene.js
+├── ResendeCostaScene.js
+├── EscolaScene.js
+├── FazendaScene.js
+
+systems/
+├── SaveSystem.js
+├── Inventario.js
+├── Dialogos.js
+├── Fases.js
+├── Multiplayer.js
+
+index.html
+style.css
+main.js
+PASSO 2 — BAIXAR TILES
+Vá em:
+
+Kenney Assets
+
+Baixe:
+Recomendados:
+Top Down Town
+ruas
+casas
+cidade
+Nature Kit
+árvores
+trilhas
+cachoeira
+Farm Pack
+fazenda
+animais
+Playground Kit
+parque
+brinquedos
+PASSO 3 — BAIXAR SPRITES
+Vá em:
+
+itch.io Assets
+
+Procure:
+top down character
+pixel family
+farm animals
+school kids
+pixel vehicles
+Personagens importantes
+Personagem	Arquivo
+menino	player.png
+pai	pai.png
+mãe	mae.png
+avô	avo.png
+avó	avoa.png
+primos	primos.png
+professora	professora.png
+PASSO 4 — CRIAR O MAPA NO TILED
+Baixe:
+
+Tiled Map Editor
+
+MAPA PRINCIPAL
+Cidade:
+
+Lagoa Dourada
+
+Lugares do mapa
+bairro
+praça
+escola
+mercado
+parque
+rodoviária
+igreja
+quadra
+casa do menino
+posto de saúde
+MAPA 2
+Cidade:
+
+Resende Costa
+
+Lugares
+casa dos avós
+fazenda
+praça
+feira
+igreja
+trilhas
+cachoeira
+rodoviária
+Configuração do mapa
+No Tiled
+Tamanho:
+128 x 128 tiles
+Tile:
+32 x 32
+Camadas importantes
+Ground
+Roads
+Houses
+Trees
+Collision
+NPCs
+Objects
+PASSO 5 — EXPORTAR MAPA
+Exportar como:
+JSON
+
+Salvar em:
+
+assets/mapas/
+PASSO 6 — CARREGAR MAPA NO PHASER
+main.js
+const config = {
+
+    type: Phaser.AUTO,
+
+    width: 1280,
+
+    height: 720,
+
+    physics: {
+
+        default: 'arcade',
+
+        arcade: {
+            gravity: { y: 0 },
+            debug: false
+        }
+    },
+
+    scene: [
+        MenuScene,
+        LagoaDouradaScene,
+        ResendeCostaScene
+    ]
+};
+
+new Phaser.Game(config);
+PASSO 7 — CENA DA CIDADE
+LagoaDouradaScene.js
+class LagoaDouradaScene extends Phaser.Scene {
+
+    constructor(){
+
+        super("LagoaDouradaScene");
+    }
+
+    preload(){
+
+        this.load.image(
+            'tiles',
+            'assets/tiles/cidade.png'
+        );
+
+        this.load.tilemapTiledJSON(
+            'mapa',
+            'assets/mapas/lagoa.json'
+        );
+
+        this.load.spritesheet(
+            'player',
+            'assets/personagens/player.png',
+            {
+                frameWidth:32,
+                frameHeight:32
+            }
+        );
+    }
+
+    create(){
+
+        const mapa = this.make.tilemap({
+            key:'mapa'
+        });
+
+        const tileset = mapa.addTilesetImage(
+            'cidade',
+            'tiles'
+        );
+
+        const chao = mapa.createLayer(
+            'Ground',
+            tileset
+        );
+
+        const ruas = mapa.createLayer(
+            'Roads',
+            tileset
+        );
+
+        const casas = mapa.createLayer(
+            'Houses',
+            tileset
+        );
+
+        const colisao = mapa.createLayer(
+            'Collision',
+            tileset
+        );
+
+        colisao.setCollisionByProperty({
+            collider:true
+        });
+
+        player = this.physics.add.sprite(
+            300,
+            300,
+            'player'
+        );
+
+        this.physics.add.collider(
+            player,
+            colisao
+        );
+
+        this.cameras.main.startFollow(player);
+
+    }
+
+    update(){
+
+        movimentarPlayer();
+    }
+}
+PASSO 8 — MOVIMENTO
+function movimentarPlayer(){
+
+    player.setVelocity(0);
+
+    if(cursors.left.isDown){
+
+        player.setVelocityX(-200);
+    }
+
+    if(cursors.right.isDown){
+
+        player.setVelocityX(200);
+    }
+
+    if(cursors.up.isDown){
+
+        player.setVelocityY(-200);
+    }
+
+    if(cursors.down.isDown){
+
+        player.setVelocityY(200);
+    }
+}
+PASSO 9 — NPCS
+Criando personagens
+let avo = this.physics.add.staticSprite(
+    600,
+    400,
+    'avo'
+);
+Diálogo
+function falar(){
+
+    mostrarMensagem(
+        "Avó: Vamos tomar café!"
+    );
+}
+PASSO 10 — SISTEMA DE MISSÕES
+let missoes = [
+
+ "beber agua",
+ "alimentar cachorro",
+ "ir escola"
+
+];
+PASSO 11 — SAVE AUTOMÁTICO
+function salvar(){
+
+    localStorage.setItem(
+        "save",
+        JSON.stringify({
+            cidade:cidadeAtual,
+            pontos:pontos
+        })
+    );
+}
+PASSO 12 — CELULAR TOUCH
+Botões
+<button id="left">◀</button>
+<button id="right">▶</button>
+<button id="up">▲</button>
+<button id="down">▼</button>
+PASSO 13 — SONS
+Sons importantes
+Som	Uso
+passarinhos	manhã
+chuva	clima
+ônibus	viagem
+trem	estação
+cachorro	quintal
+Sites de sons
+
+Freesound
+
+PASSO 14 — GRÁFICOS BONITOS
+Recomendado
+Pixel Art HD
+
+ou
+
+Cartoon suave
+Efeitos
+this.add.particles(
+    'folhas'
+);
+PASSO 15 — MULTIPLAYER
+Jogador 2
+player2 = this.physics.add.sprite(
+    500,
+    500,
+    'primo'
+);
+RESULTADO FINAL
+
+Seu jogo terá:
+
+✅ cidades mineiras
+✅ família
+✅ escola
+✅ viagens
+✅ ônibus
+✅ trem
+✅ fazenda
+✅ cachoeira
+✅ acampamento
+✅ pescaria
+✅ multiplayer
+✅ clima
+✅ fases
+✅ inventário
+✅ animais
+✅ saúde
+✅ missões educativas
+✅ gráficos bonitos
+✅ save automático
+✅ mundo aberto 2D
