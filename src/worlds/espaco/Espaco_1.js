@@ -1,0 +1,85 @@
+class Espaco_1 extends BaseGameScene {
+    constructor() {
+        super('Espaco_1', { worldId: 'espaco', levelNum: 1 });
+    }
+    create() {
+        this.preCreate();
+        const { width: w, height: h } = this.scale;
+        const lb = this.levelBuilder.init(3200);
+        this._drawBackground(w, h);
+        lb.addGroundRow(h - 60, 0x303050, 60);
+
+        lb.addPlatform(280, 231, 154, 22, 0x303050);
+        lb.addPlatform(572, 309, 167, 22, 0x6d4c41);
+        lb.addPlatform(952, 269, 138, 22, 0x5d4037);
+        lb.addPlatform(1150, 305, 115, 22, 0x795548);
+        lb.addPlatform(1568, 190, 170, 22, 0x8d6e63);
+        lb.addPlatform(1920, 312, 150, 22, 0x303050);
+        lb.addPlatform(2254, 254, 142, 22, 0x6d4c41);
+        lb.addPlatform(2240, 256, 132, 22, 0x5d4037);
+        lb.addPlatform(2976, 293, 147, 22, 0x795548);
+        lb.addPlatform(2935, 199, 130, 22, 0x8d6e63);
+
+        lb.addCoin(80, 330);
+        lb.addCoin(480, 330);
+        lb.addCoin(880, 330);
+        lb.addCoin(1280, 330);
+        lb.addCoin(1680, 330);
+        lb.addCoin(2080, 330);
+        lb.addCoin(2480, 330);
+
+        lb.addStar(577, 194);
+        lb.addStar(1383, 194);
+        lb.addStar(2151, 188);
+
+        lb.addEnemy(435, 340, 'robot', 108);
+        lb.addEnemy(1003, 340, 'ghost', 114);
+        lb.addEnemy(1535, 340, 'robot', 104);
+
+
+
+        lb.addDecoration(80, 310, 'tree', 0.8);
+        lb.addDecoration(326, 310, 'bush', 0.9);
+        lb.addDecoration(572, 310, 'rock', 0.9);
+        lb.addDecoration(818, 310, 'flower', 1.0);
+        lb.addDecoration(1064, 310, 'mushroom', 1.0);
+        lb.addDecoration(1310, 310, 'tree', 1.1);
+        lb.addDecoration(1556, 310, 'bush', 0.9);
+        lb.addDecoration(1802, 310, 'rock', 1.1);
+        lb.addDecoration(2048, 310, 'flower', 0.9);
+        lb.addDecoration(2294, 310, 'mushroom', 0.9);
+        lb.addDecoration(2540, 310, 'tree', 1.1);
+        lb.addDecoration(2786, 310, 'bush', 0.9);
+        lb.addGoal(3080, h - 160);
+        const ns = this.npcSystem;
+        ns.create(1066, 300, 'alien', { name: 'Alien', lines: ['*sons extraterrestres* (Olá, terrestre!)', 'Seu planeta é fascinante!'] });
+        this.setupMiguel(100, h - 160);
+        this.setupCollisions();
+    }
+    _drawBackground(w, h) {
+        const LW = 3200;
+        const bg = this.add.graphics().setDepth(1);
+
+        bg.fillGradientStyle(0x000014, 0x000014, 0x0a0a3a, 0x0a0a3a, 1);
+        bg.fillRect(0, 0, LW, h);
+        bg.fillStyle(0xffffff,1);
+        for(var i=0;i<200;i++){
+            var sx=(i*137+23)%LW, sy=(i*91+11)%Math.max(1,h-80), ss=(i%3)+1;
+            bg.fillCircle(sx,sy,ss);
+        }
+        bg.fillStyle(0x7c4dff,0.06); bg.fillCircle(200,h*0.3,150);
+        bg.fillStyle(0xe91e63,0.05); bg.fillCircle(700,h*0.25,120);
+        bg.fillStyle(0x00bcd4,0.06); bg.fillCircle(1400,h*0.35,100);
+        bg.fillStyle(0xff6b35,0.9); bg.fillCircle(300,100,50);
+        bg.fillStyle(0xff9800,0.4); bg.fillEllipse(300,100,150,20);
+        bg.fillStyle(0x4fc3f7,0.8); bg.fillCircle(900,80,35);
+        bg.fillStyle(0x7c4dff,0.7); bg.fillCircle(1800,120,45);
+        bg.fillStyle(0xffd700,0.9); bg.fillCircle(2600,70,25);
+        bg.fillStyle(0x555570,0.8);
+        for(var i=0;i<LW;i+=180){ bg.fillCircle(i+90,h-60,20+(i%60)); }
+
+        bg.fillStyle(0x303050, 1); bg.fillRect(0, h-60, LW, 60);
+        bg.fillStyle(0x404060, 1); bg.fillRect(0, h-62, LW, 8);
+        for(var i=0;i<LW;i+=36){ bg.fillTriangle(i, h-62, i+18, h-74, i+36, h-62); }
+    }
+}

@@ -1,128 +1,90 @@
 class MenuScene extends Phaser.Scene {
-    constructor() {
-        super('MenuScene');
-    }
-
+    constructor() { super('MenuScene'); }
     create() {
-        const { width, height } = this.scale;
-
+        const { width: w, height: h } = this.scale;
+        this._drawBg(w, h);
+        this._drawTitle(w, h);
+        this._drawMiguel(w, h);
+        this._drawMenu(w, h);
+        this._drawClouds(w, h);
+        const data = SaveSystem.load();
+        this.add.text(18, h - 36, `⭐ ${data.totalStars} estrelas  🪙 ${data.totalCoins} moedas`, { fontSize: '14px', fill: '#ffd700', stroke: '#000', strokeThickness: 3 });
+    }
+    _drawBg(w, h) {
         const bg = this.add.graphics();
-        bg.fillGradientStyle(0x1B3A6B, 0x1B3A6B, 0x0D5C2E, 0x0D5C2E, 1);
-        bg.fillRect(0, 0, width, height);
-
+        bg.fillGradientStyle(0x87ceeb, 0x87ceeb, 0xc5e8ff, 0xc5e8ff, 1);
+        bg.fillRect(0, 0, w, h);
+        bg.fillStyle(0x4caf50, 1); bg.fillRect(0, h - 100, w, 100);
+        bg.fillStyle(0x2e7d32, 1); bg.fillRect(0, h - 108, w, 12);
         for (let i = 0; i < 7; i++) {
-            const cloud = this.add.image(
-                Phaser.Math.Between(50, width - 50),
-                Phaser.Math.Between(20, 140),
-                'cloud'
-            ).setAlpha(0.65).setScale(Phaser.Math.FloatBetween(0.7, 1.2));
-            this.tweens.add({ targets: cloud, x: cloud.x + Phaser.Math.Between(-30, 30), duration: Phaser.Math.Between(4000, 8000), yoyo: true, repeat: -1 });
+            const tx = i * 170 + 30;
+            bg.fillStyle(0x5c3010, 1); bg.fillRect(tx - 8, h - 160, 16, 60);
+            bg.fillStyle(0x2d8a3e, 1); bg.fillCircle(tx, h - 168, 38);
+            bg.fillCircle(tx - 20, h - 150, 24); bg.fillCircle(tx + 20, h - 150, 24);
+            bg.fillStyle(0x3da850, 1); bg.fillCircle(tx, h - 188, 22);
         }
-
-        for (let i = 0; i < 8; i++) {
-            this.add.image(55 + i * 115, height - 65, 'tree').setScale(0.9);
-        }
-
-        const ground = this.add.graphics();
-        ground.fillStyle(0x228B22);
-        ground.fillRect(0, height - 40, width, 40);
-
-        const titlePanel = this.add.graphics();
-        titlePanel.fillStyle(0x000000, 0.5);
-        titlePanel.fillRoundedRect(width / 2 - 240, 24, 480, 110, 14);
-
-        const title = this.add.text(width / 2, 42, 'SUPER MIGUEL', {
-            fontSize: '50px',
-            fill: '#FFD700',
-            fontStyle: 'bold',
-            stroke: '#8B4513',
-            strokeThickness: 6
-        }).setOrigin(0.5, 0);
-
-        this.add.text(width / 2, 108, 'As Aventuras de Miguel  ·  Jogo Educativo', {
-            fontSize: '16px',
-            fill: '#FFFFFF',
-            stroke: '#000000',
-            strokeThickness: 2
-        }).setOrigin(0.5, 0);
-
-        this.tweens.add({ targets: title, y: 36, duration: 1200, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-
-        const miguel = this.add.sprite(width / 2, height - 90, 'miguel', 5);
-        miguel.setScale(0.24);
-        miguel.setCrop(0, 100, 256, 284);
-        miguel.play('miguel_andar');
-        this.tweens.add({ targets: miguel, y: height - 100, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-
-        const savedData = SaveSystem.load();
-
-        if (savedData) {
-            this._createButton(width / 2, height / 2 - 40, '▶  Continuar (Fase ' + savedData.fase + ')', 0x1E90FF, () => {
-                this.scene.start('MapScene', { save: savedData });
+    }
+    _drawTitle(w, h) {
+        const p = this.add.graphics();
+        p.fillStyle(0x000000, 0.4); p.fillRoundedRect(w/2-290, 18, 580, 115, 20);
+        p.lineStyle(3, 0xffd700, 1); p.strokeRoundedRect(w/2-290, 18, 580, 115, 20);
+        const t = this.add.text(w/2, 60, 'Super Miguel', { fontSize: '66px', fill: '#FFD700', fontStyle: 'bold', stroke: '#8B4513', strokeThickness: 9 }).setOrigin(0.5);
+        this.add.text(w/2, 118, 'As Aventuras de Miguel', { fontSize: '20px', fill: '#fff', stroke: '#333', strokeThickness: 3 }).setOrigin(0.5);
+        this.tweens.add({ targets: t, scaleX: 1.03, scaleY: 1.03, duration: 1000, yoyo: true, repeat: -1 });
+    }
+    _drawMiguel(w, h) {
+        const m = this.add.image(w/2 - 200, h - 178, 'miguel_stand').setScale(0.22).setDepth(10);
+        this.tweens.add({ targets: m, y: h - 193, duration: 1200, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
+        const sh = this.add.graphics().setDepth(9);
+        sh.fillStyle(0x000000, 0.2); sh.fillEllipse(w/2 - 200, h - 102, 64, 14);
+    }
+    _drawMenu(w, h) {
+        const btns = [
+            { label: '🎮  Jogar Aventura',  scene: 'WorldMapScene', color: 0x1565c0, hover: 0x1e88e5 },
+            { label: '📂  Continuar',        action: 'continue',     color: 0x2e7d32, hover: 0x43a047 },
+            { label: '🏆  Recordes',         action: 'records',      color: 0x6a1b9a, hover: 0x8e24aa },
+            { label: '🗑️  Apagar Progresso', action: 'reset',        color: 0xb71c1c, hover: 0xe53935 },
+        ];
+        btns.forEach((btn, i) => {
+            const bx = w/2 + 80, by = h - 262 + i * 58;
+            const bg = this.add.graphics();
+            const draw = (c, a) => { bg.clear(); bg.fillStyle(c, a); bg.fillRoundedRect(bx-180, by-23, 360, 46, 12); bg.lineStyle(2, 0xffffff, 0.3); bg.strokeRoundedRect(bx-180, by-23, 360, 46, 12); };
+            draw(btn.color, 0.9);
+            const txt = this.add.text(bx, by, btn.label, { fontSize: '18px', fill: '#fff', fontStyle: 'bold' }).setOrigin(0.5);
+            const z = this.add.zone(bx, by, 360, 46).setInteractive({ useHandCursor: true });
+            z.on('pointerover', () => { draw(btn.hover, 1); txt.setScale(1.05); });
+            z.on('pointerout',  () => { draw(btn.color, 0.9); txt.setScale(1); });
+            z.on('pointerdown', () => {
+                if (btn.scene) this.scene.start(btn.scene);
+                else if (btn.action === 'continue') this.scene.start('WorldMapScene');
+                else if (btn.action === 'reset') { SaveSystem.reset(); this.scene.restart(); }
+                else if (btn.action === 'records') this._showRecords();
             });
-        }
-
-        this._createButton(width / 2, height / 2 + 15, '🎮  Novo Jogo', 0x228B22, () => {
-            SaveSystem.reset();
-            this.scene.start('MapScene', { save: SaveSystem.defaultData() });
         });
-
-        this._createButton(width / 2, height / 2 + 70, '🗺️  Ver Mapa dos Mundos', 0x9C27B0, () => {
-            this.scene.start('MapScene', { save: savedData || SaveSystem.defaultData() });
-        });
-
-        if (savedData && savedData.moedas > 0) {
-            const panel = this.add.graphics();
-            panel.fillStyle(0x000000, 0.45);
-            panel.fillRoundedRect(width / 2 - 140, height / 2 + 110, 280, 36, 8);
-            this.add.text(width / 2, height / 2 + 128, `🪙 ${savedData.moedas} moedas   ⭐ ${savedData.pontos} pontos`, {
-                fontSize: '15px', fill: '#FFD700', fontStyle: 'bold'
-            }).setOrigin(0.5);
-        }
-
-        this.add.text(width / 2, height - 12, 'Use ←→ para mover  |  ↑ para pular  |  Shift para correr', {
-            fontSize: '12px', fill: '#FFFFFF', stroke: '#000000', strokeThickness: 2
-        }).setOrigin(0.5);
-
-        this._setupParticles(width, height);
+        this.add.text(w/2+80, h-28, '← → Mover  |  ↑/Espaço Pular  |  Z Ação  |  R Rebobinar tempo', { fontSize: '11px', fill: '#ffffff88' }).setOrigin(0.5);
     }
-
-    _createButton(x, y, label, color, callback) {
-        const btn = this.add.graphics();
-        btn.fillStyle(color, 1);
-        btn.fillRoundedRect(-148, -22, 296, 44, 10);
-        btn.lineStyle(3, 0xFFFFFF, 0.6);
-        btn.strokeRoundedRect(-148, -22, 296, 44, 10);
-        btn.setPosition(x, y);
-        btn.setInteractive(new Phaser.Geom.Rectangle(-148, -22, 296, 44), Phaser.Geom.Rectangle.Contains);
-
-        const txt = this.add.text(x, y, label, {
-            fontSize: '19px', fill: '#FFFFFF', fontStyle: 'bold',
-            stroke: '#000000', strokeThickness: 2
-        }).setOrigin(0.5);
-
-        btn.on('pointerover', () => { btn.setScale(1.06); txt.setScale(1.06); });
-        btn.on('pointerout',  () => { btn.setScale(1);    txt.setScale(1);    });
-        btn.on('pointerdown', () => {
-            this.tweens.add({ targets: [btn, txt], scaleX: 0.96, scaleY: 0.96, duration: 80, yoyo: true, onComplete: callback });
-        });
-        return btn;
+    _drawClouds(w, h) {
+        for (let i = 0; i < 6; i++) {
+            const g = this.add.graphics().setDepth(4);
+            const cy = Phaser.Math.Between(40, 200), sc = 0.6 + Math.random() * 0.8;
+            g.fillStyle(0xffffff, 0.82); g.fillEllipse(0,0,110,38); g.fillEllipse(-30,-12,62,36); g.fillEllipse(28,-12,52,30);
+            g.x = Phaser.Math.Between(-120, w+120); g.y = cy; g.setScale(sc);
+            this.tweens.add({ targets: g, x: w+200, duration: Phaser.Math.Between(14000, 28000), repeat: -1, onRepeat: () => { g.x=-200; g.y=Phaser.Math.Between(40,200); } });
+        }
     }
-
-    _setupParticles(width, height) {
-        this.time.addEvent({
-            delay: 700, loop: true,
-            callback: () => {
-                const star = this.add.image(
-                    Phaser.Math.Between(20, width - 20),
-                    Phaser.Math.Between(150, height - 80),
-                    'estrela'
-                ).setAlpha(0).setScale(Phaser.Math.FloatBetween(0.3, 0.7));
-                this.tweens.add({
-                    targets: star, alpha: 0.9, y: star.y - 45, duration: 800,
-                    onComplete: () => this.tweens.add({ targets: star, alpha: 0, duration: 500, onComplete: () => star.destroy() })
-                });
-            }
+    _showRecords() {
+        const { width: w, height: h } = this.scale, data = SaveSystem.load();
+        const ov = this.add.graphics().setDepth(400);
+        ov.fillStyle(0x000000, 0.55); ov.fillRect(0,0,w,h);
+        ov.fillStyle(0x0d0d1a, 0.98); ov.fillRoundedRect(w/2-300, h/2-240, 600, 480, 22);
+        ov.lineStyle(3, 0xffd700, 1); ov.strokeRoundedRect(w/2-300, h/2-240, 600, 480, 22);
+        this.add.text(w/2, h/2-210, '🏆 Recordes por Mundo', { fontSize: '24px', fill: '#ffd700', fontStyle: 'bold' }).setOrigin(0.5).setDepth(401);
+        WORLDS.forEach((world, i) => {
+            const wd = data.worlds[world.id] || {}, stars = Object.values(wd.levels||{}).reduce((s,l)=>s+(l.stars||0),0), completed = Object.values(wd.levels||{}).filter(l=>l.completed).length;
+            const y = h/2 - 160 + i * 38;
+            this.add.text(w/2-270, y, (wd.unlocked?'':'🔒 ') + world.name, { fontSize: '14px', fill: '#fff' }).setDepth(401);
+            this.add.text(w/2+90, y, `${completed}/10 fases  ⭐ ${stars}/30`, { fontSize: '14px', fill: '#ffd700' }).setDepth(401);
         });
+        this.add.text(w/2, h/2+210, '✖ Fechar', { fontSize: '20px', fill: '#ff4444', fontStyle: 'bold' }).setOrigin(0.5).setDepth(401).setInteractive({useHandCursor:true}).on('pointerdown',()=>this.scene.restart());
     }
 }

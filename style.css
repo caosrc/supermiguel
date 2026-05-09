@@ -4,37 +4,37 @@
     box-sizing: border-box;
 }
 
-body {
-    background: #1a0a2e;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+html, body {
+    width: 100%;
+    height: 100%;
     overflow: hidden;
+    background: #0a0a1a;
     font-family: 'Arial', sans-serif;
 }
 
 #game-wrapper {
-    position: relative;
     width: 100vw;
     height: 100vh;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    background: #000;
 }
 
 #game-container {
-    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #game-container canvas {
     display: block;
     margin: 0 auto;
 }
-
-/* =============================================
-   CONTROLES TOUCH — estilo jogo mobile
-   ============================================= */
 
 #controles-touch {
     position: fixed;
@@ -49,7 +49,6 @@ body {
     z-index: 200;
 }
 
-/* Lado esquerdo: D-pad horizontal */
 #controles-esquerda {
     display: flex;
     gap: 6px;
@@ -57,124 +56,73 @@ body {
     align-items: center;
 }
 
-/* Lado direito: botões de ação empilhados verticalmente */
 #controles-direita {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 10px;
     pointer-events: auto;
     align-items: center;
 }
 
-/* Base de todos os botões */
 .btn-touch {
+    width: 68px;
+    height: 68px;
     border-radius: 50%;
-    border: none;
-    outline: none;
+    border: 2.5px solid rgba(255,255,255,0.25);
+    background: rgba(0,0,0,0.35);
+    color: rgba(255,255,255,0.7);
+    font-size: 24px;
     cursor: pointer;
-    touch-action: manipulation;
     user-select: none;
     -webkit-user-select: none;
+    touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
-    transition: opacity 0.08s, transform 0.08s;
+    transition: background 0.08s, transform 0.08s;
+    backdrop-filter: blur(4px);
 }
 
-/* Botões de direção (esquerda / direita) */
-#btn-esquerda,
-#btn-direita {
-    width: 72px;
-    height: 72px;
-    background: rgba(255, 255, 255, 0.07);
-    border: 2px solid rgba(255, 255, 255, 0.12);
-    font-size: 0;
-    color: transparent;
+.btn-touch:active {
+    background: rgba(255,220,50,0.35);
+    border-color: rgba(255,220,50,0.7);
+    transform: scale(0.9);
 }
 
-/* Setas desenhadas em CSS puro */
-#btn-esquerda::after {
-    content: '';
-    width: 0;
-    height: 0;
-    border-top: 13px solid transparent;
-    border-bottom: 13px solid transparent;
-    border-right: 20px solid rgba(255, 255, 255, 0.35);
-    margin-right: 4px;
-}
-
-#btn-direita::after {
-    content: '';
-    width: 0;
-    height: 0;
-    border-top: 13px solid transparent;
-    border-bottom: 13px solid transparent;
-    border-left: 20px solid rgba(255, 255, 255, 0.35);
-    margin-left: 4px;
-}
-
-/* Botão pular (em cima do de ação) */
 #btn-pular {
-    width: 76px;
-    height: 76px;
-    background: rgba(100, 220, 255, 0.08);
-    border: 2px solid rgba(100, 220, 255, 0.18);
-    font-size: 0;
-    color: transparent;
+    background: rgba(30,120,255,0.3);
+    border-color: rgba(80,160,255,0.5);
+    font-size: 20px;
 }
 
-#btn-pular::after {
-    content: '';
-    width: 0;
-    height: 0;
-    border-left: 13px solid transparent;
-    border-right: 13px solid transparent;
-    border-bottom: 20px solid rgba(100, 220, 255, 0.45);
-    margin-bottom: 4px;
-}
-
-/* Botão ação (estrela) */
 #btn-acao {
-    width: 70px;
-    height: 70px;
-    background: rgba(255, 215, 0, 0.08);
-    border: 2px solid rgba(255, 215, 0, 0.18);
-    font-size: 22px;
-    color: rgba(255, 215, 0, 0.30);
-    line-height: 1;
+    background: rgba(255,140,0,0.3);
+    border-color: rgba(255,180,0,0.5);
 }
 
-/* Estado pressionado */
-#btn-esquerda:active,
-#btn-direita:active {
-    background: rgba(255, 255, 255, 0.22);
-    border-color: rgba(255, 255, 255, 0.45);
-    transform: scale(0.93);
+/* Touch controls */
+#controles-touch {
+    position: fixed;
+    bottom: 16px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 0 18px;
+    pointer-events: none;
+    z-index: 200;
 }
-
-#btn-esquerda:active::after {
-    border-right-color: rgba(255, 255, 255, 0.85);
+#controles-esquerda {
+    display: flex;
+    gap: 8px;
+    pointer-events: auto;
 }
-
-#btn-direita:active::after {
-    border-left-color: rgba(255, 255, 255, 0.85);
-}
-
-#btn-pular:active {
-    background: rgba(100, 220, 255, 0.28);
-    border-color: rgba(100, 220, 255, 0.55);
-    transform: scale(0.93);
-}
-
-#btn-pular:active::after {
-    border-bottom-color: rgba(100, 220, 255, 0.95);
-}
-
-#btn-acao:active {
-    background: rgba(255, 215, 0, 0.28);
-    border-color: rgba(255, 215, 0, 0.55);
-    color: rgba(255, 215, 0, 0.95);
-    transform: scale(0.93);
+#controles-direita {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    pointer-events: auto;
+    align-items: center;
 }

@@ -15,7 +15,7 @@
                 <button id="btn-direita"  class="btn-touch">▶</button>
             </div>
             <div id="controles-direita">
-                <button id="btn-pular" class="btn-touch">🔼</button>
+                <button id="btn-pular" class="btn-touch">↑</button>
                 <button id="btn-acao"  class="btn-touch">⭐</button>
             </div>
         </div>
@@ -23,21 +23,146 @@
 
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
 
-    <!-- Utilitários e Sistemas -->
-    <script src="src/utils/GraphicsHelper.js"></script>
-    <script src="src/systems/SaveSystem.js"></script>
-    <script src="src/systems/DialogSystem.js"></script>
-    <script src="src/systems/HUDSystem.js"></script>
+    <!-- Helpers -->
+    <script src="src/utils/DrawHelpers.js"></script>
 
-    <!-- Cenas -->
+    <!-- Core Systems -->
+    <script src="src/core/Constants.js"></script>
+    <script src="src/core/SaveSystem.js"></script>
+    <script src="src/core/TimeRewind.js"></script>
+    <script src="src/core/DialogSystem.js"></script>
+    <script src="src/core/HUDSystem.js"></script>
+    <script src="src/core/ParticleSystem.js"></script>
+    <script src="src/core/MiguelCharacter.js"></script>
+    <script src="src/core/NPCSystem.js"></script>
+    <script src="src/core/LevelBuilder.js"></script>
+
+    <!-- Scenes -->
     <script src="src/scenes/BootScene.js"></script>
+    <script src="src/scenes/LoadingScene.js"></script>
     <script src="src/scenes/MenuScene.js"></script>
-    <script src="src/scenes/MapScene.js"></script>
-    <script src="src/scenes/GameScene.js"></script>
-    <script src="src/scenes/FazendaScene.js"></script>
-    <script src="src/scenes/FlorestaScene.js"></script>
-    <script src="src/scenes/CachoeirScene.js"></script>
-    <script src="src/scenes/DocesScene.js"></script>
+    <script src="src/scenes/WorldMapScene.js"></script>
+    <script src="src/scenes/BaseGameScene.js"></script>
+
+    <!-- World 1: Cidade -->
+    <script src="src/worlds/cidade/Cidade_1.js"></script>
+    <script src="src/worlds/cidade/Cidade_2.js"></script>
+    <script src="src/worlds/cidade/Cidade_3.js"></script>
+    <script src="src/worlds/cidade/Cidade_4.js"></script>
+    <script src="src/worlds/cidade/Cidade_5.js"></script>
+    <script src="src/worlds/cidade/Cidade_6.js"></script>
+    <script src="src/worlds/cidade/Cidade_7.js"></script>
+    <script src="src/worlds/cidade/Cidade_8.js"></script>
+    <script src="src/worlds/cidade/Cidade_9.js"></script>
+    <script src="src/worlds/cidade/Cidade_10.js"></script>
+
+    <!-- World 2: Floresta -->
+    <script src="src/worlds/floresta/Floresta_1.js"></script>
+    <script src="src/worlds/floresta/Floresta_2.js"></script>
+    <script src="src/worlds/floresta/Floresta_3.js"></script>
+    <script src="src/worlds/floresta/Floresta_4.js"></script>
+    <script src="src/worlds/floresta/Floresta_5.js"></script>
+    <script src="src/worlds/floresta/Floresta_6.js"></script>
+    <script src="src/worlds/floresta/Floresta_7.js"></script>
+    <script src="src/worlds/floresta/Floresta_8.js"></script>
+    <script src="src/worlds/floresta/Floresta_9.js"></script>
+    <script src="src/worlds/floresta/Floresta_10.js"></script>
+
+    <!-- World 3: Fazenda -->
+    <script src="src/worlds/fazenda/Fazenda_1.js"></script>
+    <script src="src/worlds/fazenda/Fazenda_2.js"></script>
+    <script src="src/worlds/fazenda/Fazenda_3.js"></script>
+    <script src="src/worlds/fazenda/Fazenda_4.js"></script>
+    <script src="src/worlds/fazenda/Fazenda_5.js"></script>
+    <script src="src/worlds/fazenda/Fazenda_6.js"></script>
+    <script src="src/worlds/fazenda/Fazenda_7.js"></script>
+    <script src="src/worlds/fazenda/Fazenda_8.js"></script>
+    <script src="src/worlds/fazenda/Fazenda_9.js"></script>
+    <script src="src/worlds/fazenda/Fazenda_10.js"></script>
+
+    <!-- World 4: Cachoeira -->
+    <script src="src/worlds/cachoeira/Cachoeira_1.js"></script>
+    <script src="src/worlds/cachoeira/Cachoeira_2.js"></script>
+    <script src="src/worlds/cachoeira/Cachoeira_3.js"></script>
+    <script src="src/worlds/cachoeira/Cachoeira_4.js"></script>
+    <script src="src/worlds/cachoeira/Cachoeira_5.js"></script>
+    <script src="src/worlds/cachoeira/Cachoeira_6.js"></script>
+    <script src="src/worlds/cachoeira/Cachoeira_7.js"></script>
+    <script src="src/worlds/cachoeira/Cachoeira_8.js"></script>
+    <script src="src/worlds/cachoeira/Cachoeira_9.js"></script>
+    <script src="src/worlds/cachoeira/Cachoeira_10.js"></script>
+
+    <!-- World 5: Escola -->
+    <script src="src/worlds/escola/Escola_1.js"></script>
+    <script src="src/worlds/escola/Escola_2.js"></script>
+    <script src="src/worlds/escola/Escola_3.js"></script>
+    <script src="src/worlds/escola/Escola_4.js"></script>
+    <script src="src/worlds/escola/Escola_5.js"></script>
+    <script src="src/worlds/escola/Escola_6.js"></script>
+    <script src="src/worlds/escola/Escola_7.js"></script>
+    <script src="src/worlds/escola/Escola_8.js"></script>
+    <script src="src/worlds/escola/Escola_9.js"></script>
+    <script src="src/worlds/escola/Escola_10.js"></script>
+
+    <!-- World 6: Praia -->
+    <script src="src/worlds/praia/Praia_1.js"></script>
+    <script src="src/worlds/praia/Praia_2.js"></script>
+    <script src="src/worlds/praia/Praia_3.js"></script>
+    <script src="src/worlds/praia/Praia_4.js"></script>
+    <script src="src/worlds/praia/Praia_5.js"></script>
+    <script src="src/worlds/praia/Praia_6.js"></script>
+    <script src="src/worlds/praia/Praia_7.js"></script>
+    <script src="src/worlds/praia/Praia_8.js"></script>
+    <script src="src/worlds/praia/Praia_9.js"></script>
+    <script src="src/worlds/praia/Praia_10.js"></script>
+
+    <!-- World 7: Espaco -->
+    <script src="src/worlds/espaco/Espaco_1.js"></script>
+    <script src="src/worlds/espaco/Espaco_2.js"></script>
+    <script src="src/worlds/espaco/Espaco_3.js"></script>
+    <script src="src/worlds/espaco/Espaco_4.js"></script>
+    <script src="src/worlds/espaco/Espaco_5.js"></script>
+    <script src="src/worlds/espaco/Espaco_6.js"></script>
+    <script src="src/worlds/espaco/Espaco_7.js"></script>
+    <script src="src/worlds/espaco/Espaco_8.js"></script>
+    <script src="src/worlds/espaco/Espaco_9.js"></script>
+    <script src="src/worlds/espaco/Espaco_10.js"></script>
+
+    <!-- World 8: Doces -->
+    <script src="src/worlds/doces/Doces_1.js"></script>
+    <script src="src/worlds/doces/Doces_2.js"></script>
+    <script src="src/worlds/doces/Doces_3.js"></script>
+    <script src="src/worlds/doces/Doces_4.js"></script>
+    <script src="src/worlds/doces/Doces_5.js"></script>
+    <script src="src/worlds/doces/Doces_6.js"></script>
+    <script src="src/worlds/doces/Doces_7.js"></script>
+    <script src="src/worlds/doces/Doces_8.js"></script>
+    <script src="src/worlds/doces/Doces_9.js"></script>
+    <script src="src/worlds/doces/Doces_10.js"></script>
+
+    <!-- World 9: Medieval -->
+    <script src="src/worlds/medieval/Medieval_1.js"></script>
+    <script src="src/worlds/medieval/Medieval_2.js"></script>
+    <script src="src/worlds/medieval/Medieval_3.js"></script>
+    <script src="src/worlds/medieval/Medieval_4.js"></script>
+    <script src="src/worlds/medieval/Medieval_5.js"></script>
+    <script src="src/worlds/medieval/Medieval_6.js"></script>
+    <script src="src/worlds/medieval/Medieval_7.js"></script>
+    <script src="src/worlds/medieval/Medieval_8.js"></script>
+    <script src="src/worlds/medieval/Medieval_9.js"></script>
+    <script src="src/worlds/medieval/Medieval_10.js"></script>
+
+    <!-- World 10: Sonhos -->
+    <script src="src/worlds/sonhos/Sonhos_1.js"></script>
+    <script src="src/worlds/sonhos/Sonhos_2.js"></script>
+    <script src="src/worlds/sonhos/Sonhos_3.js"></script>
+    <script src="src/worlds/sonhos/Sonhos_4.js"></script>
+    <script src="src/worlds/sonhos/Sonhos_5.js"></script>
+    <script src="src/worlds/sonhos/Sonhos_6.js"></script>
+    <script src="src/worlds/sonhos/Sonhos_7.js"></script>
+    <script src="src/worlds/sonhos/Sonhos_8.js"></script>
+    <script src="src/worlds/sonhos/Sonhos_9.js"></script>
+    <script src="src/worlds/sonhos/Sonhos_10.js"></script>
 
     <script src="main.js"></script>
 </body>
