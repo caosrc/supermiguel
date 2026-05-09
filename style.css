@@ -101,28 +101,22 @@ html, body {
     border-color: rgba(255,180,0,0.5);
 }
 
-/* Touch controls */
-#controles-touch {
-    position: fixed;
-    bottom: 16px;
-    left: 0;
-    right: 0;
+#coluna-centro {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    padding: 0 18px;
-    pointer-events: none;
-    z-index: 200;
-}
-#controles-esquerda {
-    display: flex;
-    gap: 8px;
-    pointer-events: auto;
-}
-#controles-direita {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    pointer-events: auto;
+    flex-direction: column;
     align-items: center;
+    justify-content: flex-end;
+}
+
+.btn-agachar {
+    background: rgba(0, 180, 100, 0.28) !important;
+    border-color: rgba(0, 220, 120, 0.55) !important;
+    font-size: 22px !important;
+    width: 58px !important;
+    height: 58px !important;
+}
+
+.btn-agachar:active {
+    background: rgba(0, 220, 120, 0.45) !important;
+    border-color: rgba(0, 255, 140, 0.8) !important;
 }

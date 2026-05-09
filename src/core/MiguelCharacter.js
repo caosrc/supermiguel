@@ -57,6 +57,7 @@ class MiguelCharacter {
 
         this.touchLeft = false; this.touchRight = false;
         this.touchJump = false; this.touchAction = false;
+        this.touchCrouch = false;
         this._jumpKeyWasDown = false;
 
         const setupTouch = (id, prop) => {
@@ -71,6 +72,7 @@ class MiguelCharacter {
         setupTouch('btn-direita',  'touchRight');
         setupTouch('btn-pular',    'touchJump');
         setupTouch('btn-acao',     'touchAction');
+        setupTouch('btn-agachar',  'touchCrouch');
     }
 
     isLeft()    { return this.cursors.left.isDown   || this.keyA.isDown    || this.touchLeft; }
