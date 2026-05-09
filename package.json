@@ -1,0 +1,12 @@
+{
+  "name": "super-miguel",
+  "version": "1.0.0",
+  "description": "Super Miguel - As Aventuras de Miguel, um jogo educativo 2D",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
