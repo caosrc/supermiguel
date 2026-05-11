@@ -50,6 +50,7 @@ class BicicletaScene extends Phaser.Scene {
         this._initHUD();
         this._initControls();
         this._spawnInitialCoins();
+        this._initAudio();
     }
 
     _initBg() {
@@ -453,6 +454,7 @@ class BicicletaScene extends Phaser.Scene {
         const dt = delta / 1000;
 
         if (this.keys.esc.isDown) {
+            this._stopAllAudio();
             this.scene.start('MenuScene');
             return;
         }
@@ -465,6 +467,7 @@ class BicicletaScene extends Phaser.Scene {
         this._updateClouds(dt);
         this._updatePlayer(dt);
         this._updateHUD(dt);
+        this._updateAudio();
         this._checkWin();
     }
 
@@ -490,7 +493,9 @@ class BicicletaScene extends Phaser.Scene {
 
         if (boost) {
             this.speed = Math.min(this.speed + 8 * dt, this.maxSpeed);
+            this._soundBoostStart();
         } else {
+            this._soundBoostStop();
             const base = 3 + Math.min(this.distance / 500, 5);
             this.speed = Phaser.Math.Linear(this.speed, base, 0.02);
         }
@@ -604,6 +609,7 @@ class BicicletaScene extends Phaser.Scene {
                     c.gfx.destroy();
                     c.active = false;
                     this.score += 10;
+                    this._soundCoin();
                     this._coinBurst(c.x, c.y);
                 }
             }
@@ -731,6 +737,7 @@ class BicicletaScene extends Phaser.Scene {
         this.speed = Math.max(this.speed * 0.4, 1.5);
         this.shakeTimer = 0.35;
         this._drawLives();
+        this._soundHit();
 
         const { W, H } = this;
         const flash = this.add.graphics().setDepth(30);
@@ -757,6 +764,8 @@ class BicicletaScene extends Phaser.Scene {
 
     _showGameOver() {
         this.gameOver = true;
+        this._soundGameOver();
+        this._stopAllAudio();
         const { W, H } = this;
 
         const ov = this.add.graphics().setDepth(40);
@@ -784,6 +793,8 @@ class BicicletaScene extends Phaser.Scene {
     }
 
     _showWin() {
+        this._soundWin();
+        this._stopAllAudio();
         const { W, H } = this;
 
         const ov = this.add.graphics().setDepth(40);
@@ -827,5 +838,287 @@ class BicicletaScene extends Phaser.Scene {
         txt.on('pointerover',  () => txt.setScale(1.07));
         txt.on('pointerout',   () => txt.setScale(1));
         txt.on('pointerdown',  cb);
+    }
+
+    _initAudio() {
+        try {
+            this._ac = new (window.AudioContext || window.webkitAudioContext)();
+        } catch(e) {
+            this._ac = null;
+            return;
+        }
+
+        const ac = this._ac;
+
+        this._masterGain = ac.createGain();
+        this._masterGain.gain.value = 0.7;
+        this._masterGain.connect(ac.destination);
+
+        this._windGain = ac.createGain();
+        this._windGain.gain.value = 0;
+        this._windGain.connect(this._masterGain);
+
+        const bufSize = ac.sampleRate * 2;
+        const noiseBuffer = ac.createBuffer(1, bufSize, ac.sampleRate);
+        const data = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
+
+        this._noiseSource = ac.createBufferSource();
+        this._noiseSource.buffer = noiseBuffer;
+        this._noiseSource.loop = true;
+
+        const windFilter = ac.createBiquadFilter();
+        windFilter.type = 'bandpass';
+        windFilter.frequency.value = 600;
+        windFilter.Q.value = 0.8;
+
+        const windFilter2 = ac.createBiquadFilter();
+        windFilter2.type = 'lowpass';
+        windFilter2.frequency.value = 1200;
+
+        this._noiseSource.connect(windFilter);
+        windFilter.connect(windFilter2);
+        windFilter2.connect(this._windGain);
+        this._noiseSource.start();
+
+        this._wheelGain = ac.createGain();
+        this._wheelGain.gain.value = 0;
+        this._wheelGain.connect(this._masterGain);
+
+        const wheelBuf = ac.createBuffer(1, bufSize, ac.sampleRate);
+        const wd = wheelBuf.getChannelData(0);
+        for (let i = 0; i < bufSize; i++) wd[i] = (Math.random() * 2 - 1) * 0.3;
+
+        this._wheelSource = ac.createBufferSource();
+        this._wheelSource.buffer = wheelBuf;
+        this._wheelSource.loop = true;
+
+        const wheelFilter = ac.createBiquadFilter();
+        wheelFilter.type = 'highpass';
+        wheelFilter.frequency.value = 3000;
+
+        this._wheelSource.connect(wheelFilter);
+        wheelFilter.connect(this._wheelGain);
+        this._wheelSource.start();
+
+        this._musicOscs = [];
+        this._startBgMusic();
+    }
+
+    _startBgMusic() {
+        if (!this._ac) return;
+        const ac = this._ac;
+
+        const melody = [
+            { note: 523.25, dur: 0.25 },
+            { note: 587.33, dur: 0.25 },
+            { note: 659.25, dur: 0.25 },
+            { note: 783.99, dur: 0.5  },
+            { note: 659.25, dur: 0.25 },
+            { note: 587.33, dur: 0.25 },
+            { note: 523.25, dur: 0.5  },
+            { note: 440.00, dur: 0.25 },
+            { note: 493.88, dur: 0.25 },
+            { note: 523.25, dur: 0.25 },
+            { note: 659.25, dur: 0.5  },
+            { note: 587.33, dur: 0.25 },
+            { note: 523.25, dur: 0.25 },
+            { note: 493.88, dur: 1.0  },
+        ];
+
+        const musicGain = ac.createGain();
+        musicGain.gain.value = 0.08;
+        musicGain.connect(this._masterGain);
+        this._musicGain = musicGain;
+
+        const totalDur = melody.reduce((s, n) => s + n.dur, 0);
+        this._scheduleMelody(melody, ac.currentTime, musicGain, totalDur);
+    }
+
+    _scheduleMelody(melody, startTime, gainNode, totalDur) {
+        if (!this._ac || this.gameOver || this.win) return;
+        const ac = this._ac;
+        let t = startTime;
+        melody.forEach(m => {
+            const osc = ac.createOscillator();
+            const g   = ac.createGain();
+            osc.type = 'triangle';
+            osc.frequency.value = m.note;
+            g.gain.setValueAtTime(0, t);
+            g.gain.linearRampToValueAtTime(0.6, t + 0.02);
+            g.gain.linearRampToValueAtTime(0.3, t + m.dur * 0.6);
+            g.gain.linearRampToValueAtTime(0, t + m.dur - 0.02);
+            osc.connect(g);
+            g.connect(gainNode);
+            osc.start(t);
+            osc.stop(t + m.dur);
+            t += m.dur;
+        });
+
+        this._melodyTimer = this.time.delayedCall(totalDur * 1000 + 300, () => {
+            this._scheduleMelody(melody, ac.currentTime, gainNode, totalDur);
+        });
+    }
+
+    _updateAudio() {
+        if (!this._ac) return;
+        const ratio = (this.speed - 1) / (this.maxSpeed - 1);
+        const windVol = 0.04 + ratio * 0.22;
+        const wheelVol = 0.0 + ratio * 0.08;
+
+        const t = this._ac.currentTime;
+        this._windGain.gain.setTargetAtTime(windVol, t, 0.3);
+        this._wheelGain.gain.setTargetAtTime(wheelVol, t, 0.2);
+
+        if (this._musicGain) {
+            const musicVol = 0.06 + ratio * 0.06;
+            this._musicGain.gain.setTargetAtTime(musicVol, t, 0.5);
+        }
+    }
+
+    _soundCoin() {
+        if (!this._ac) return;
+        const ac = this._ac;
+        const notes = [1046.5, 1318.5, 1567.98];
+        let t = ac.currentTime;
+        notes.forEach(freq => {
+            const osc = ac.createOscillator();
+            const g   = ac.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+            g.gain.setValueAtTime(0.35, t);
+            g.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+            osc.connect(g);
+            g.connect(this._masterGain);
+            osc.start(t);
+            osc.stop(t + 0.18);
+            t += 0.06;
+        });
+    }
+
+    _soundHit() {
+        if (!this._ac) return;
+        const ac = this._ac;
+        const bufSize = ac.sampleRate * 0.5;
+        const buf = ac.createBuffer(1, bufSize, ac.sampleRate);
+        const d   = buf.getChannelData(0);
+        for (let i = 0; i < bufSize; i++) {
+            d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufSize, 1.5);
+        }
+        const src  = ac.createBufferSource();
+        const filt = ac.createBiquadFilter();
+        const g    = ac.createGain();
+        filt.type = 'lowpass';
+        filt.frequency.value = 350;
+        g.gain.setValueAtTime(0.8, ac.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.45);
+        src.buffer = buf;
+        src.connect(filt);
+        filt.connect(g);
+        g.connect(this._masterGain);
+        src.start();
+        src.stop(ac.currentTime + 0.5);
+
+        const osc = ac.createOscillator();
+        const og  = ac.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(180, ac.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(40, ac.currentTime + 0.3);
+        og.gain.setValueAtTime(0.4, ac.currentTime);
+        og.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.3);
+        osc.connect(og);
+        og.connect(this._masterGain);
+        osc.start();
+        osc.stop(ac.currentTime + 0.3);
+    }
+
+    _soundBoostStart() {
+        if (!this._ac || this._boostOsc) return;
+        const ac = this._ac;
+        const osc = ac.createOscillator();
+        const g   = ac.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(80, ac.currentTime);
+        osc.frequency.linearRampToValueAtTime(160, ac.currentTime + 0.4);
+        g.gain.setValueAtTime(0, ac.currentTime);
+        g.gain.linearRampToValueAtTime(0.12, ac.currentTime + 0.1);
+        osc.connect(g);
+        g.connect(this._masterGain);
+        osc.start();
+        this._boostOsc   = osc;
+        this._boostGain  = g;
+    }
+
+    _soundBoostStop() {
+        if (!this._ac || !this._boostOsc) return;
+        const t = this._ac.currentTime;
+        this._boostGain.gain.setTargetAtTime(0, t, 0.1);
+        this._boostOsc.stop(t + 0.25);
+        this._boostOsc  = null;
+        this._boostGain = null;
+    }
+
+    _soundWin() {
+        if (!this._ac) return;
+        const ac = this._ac;
+        const fanfare = [
+            { f: 523.25, t: 0.00, d: 0.15 },
+            { f: 659.25, t: 0.15, d: 0.15 },
+            { f: 783.99, t: 0.30, d: 0.15 },
+            { f: 1046.5, t: 0.45, d: 0.55 },
+            { f: 880.00, t: 0.60, d: 0.20 },
+            { f: 1046.5, t: 0.80, d: 0.70 },
+        ];
+        fanfare.forEach(n => {
+            const osc = ac.createOscillator();
+            const g   = ac.createGain();
+            osc.type = 'square';
+            osc.frequency.value = n.f;
+            g.gain.setValueAtTime(0, ac.currentTime + n.t);
+            g.gain.linearRampToValueAtTime(0.3, ac.currentTime + n.t + 0.02);
+            g.gain.linearRampToValueAtTime(0, ac.currentTime + n.t + n.d);
+            osc.connect(g);
+            g.connect(this._masterGain);
+            osc.start(ac.currentTime + n.t);
+            osc.stop(ac.currentTime + n.t + n.d + 0.05);
+        });
+    }
+
+    _soundGameOver() {
+        if (!this._ac) return;
+        const ac = this._ac;
+        const seq = [
+            { f: 440, t: 0.00, d: 0.25 },
+            { f: 370, t: 0.25, d: 0.25 },
+            { f: 311, t: 0.50, d: 0.25 },
+            { f: 233, t: 0.75, d: 0.60 },
+        ];
+        seq.forEach(n => {
+            const osc = ac.createOscillator();
+            const g   = ac.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.value = n.f;
+            g.gain.setValueAtTime(0.3, ac.currentTime + n.t);
+            g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + n.t + n.d);
+            osc.connect(g);
+            g.connect(this._masterGain);
+            osc.start(ac.currentTime + n.t);
+            osc.stop(ac.currentTime + n.t + n.d + 0.05);
+        });
+    }
+
+    _stopAllAudio() {
+        if (!this._ac) return;
+        try {
+            if (this._noiseSource) { this._noiseSource.stop(); this._noiseSource = null; }
+            if (this._wheelSource) { this._wheelSource.stop(); this._wheelSource = null; }
+            if (this._boostOsc)    { this._boostOsc.stop();    this._boostOsc = null; }
+            this._masterGain.gain.setTargetAtTime(0, this._ac.currentTime, 0.1);
+            setTimeout(() => { if (this._ac) { this._ac.close(); this._ac = null; } }, 300);
+        } catch(e) {}
+    }
+
+    shutdown() {
+        this._stopAllAudio();
     }
 }
