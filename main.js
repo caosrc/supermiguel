@@ -1,5 +1,5 @@
 const allScenes = [
-    BootScene, LoadingScene, MenuScene, WorldMapScene,
+    BootScene, LoadingScene, MenuScene, WorldMapScene, BicicletaScene,
     // Cidade
     Cidade_1, Cidade_2, Cidade_3, Cidade_4, Cidade_5,
     Cidade_6, Cidade_7, Cidade_8, Cidade_9, Cidade_10,

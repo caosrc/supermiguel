@@ -40,10 +40,11 @@ class MenuScene extends Phaser.Scene {
     }
     _drawMenu(w, h) {
         const btns = [
-            { label: '🎮  Jogar Aventura',  scene: 'WorldMapScene', color: 0x1565c0, hover: 0x1e88e5 },
-            { label: '📂  Continuar',        action: 'continue',     color: 0x2e7d32, hover: 0x43a047 },
-            { label: '🏆  Recordes',         action: 'records',      color: 0x6a1b9a, hover: 0x8e24aa },
-            { label: '🗑️  Apagar Progresso', action: 'reset',        color: 0xb71c1c, hover: 0xe53935 },
+            { label: '🎮  Jogar Aventura',   scene: 'WorldMapScene',  color: 0x1565c0, hover: 0x1e88e5 },
+            { label: '🚲  Fase da Bicicleta', scene: 'BicicletaScene', color: 0xe65100, hover: 0xff6f00 },
+            { label: '📂  Continuar',         action: 'continue',      color: 0x2e7d32, hover: 0x43a047 },
+            { label: '🏆  Recordes',          action: 'records',       color: 0x6a1b9a, hover: 0x8e24aa },
+            { label: '🗑️  Apagar Progresso',  action: 'reset',         color: 0xb71c1c, hover: 0xe53935 },
         ];
         btns.forEach((btn, i) => {
             const bx = w/2 + 80, by = h - 262 + i * 58;
