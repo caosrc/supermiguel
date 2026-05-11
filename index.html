@@ -9,6 +9,8 @@
 <body>
     <div id="game-wrapper">
         <div id="game-container"></div>
+        <div id="sm-vignette"></div>
+        <canvas id="sm-grain"></canvas>
         <div id="controles-touch">
             <div id="controles-esquerda">
                 <button id="btn-esquerda"  class="btn-touch">◀</button>
@@ -28,6 +30,9 @@
 
     <!-- Helpers -->
     <script src="src/utils/DrawHelpers.js"></script>
+
+    <!-- Stop-Motion System -->
+    <script src="src/systems/StopMotion.js"></script>
 
     <!-- Core Systems -->
     <script src="src/core/Constants.js"></script>
@@ -169,5 +174,53 @@
     <script src="src/worlds/sonhos/Sonhos_10.js"></script>
 
     <script src="main.js"></script>
+
+    <script>
+    (function () {
+        const canvas = document.getElementById('sm-grain');
+        const ctx = canvas.getContext('2d');
+        const NOISE_W = 256, NOISE_H = 256;
+        const FRAMES = 6;
+        const offscreens = [];
+
+        for (let f = 0; f < FRAMES; f++) {
+            const oc = document.createElement('canvas');
+            oc.width = NOISE_W; oc.height = NOISE_H;
+            const oc2 = oc.getContext('2d');
+            const id = oc2.createImageData(NOISE_W, NOISE_H);
+            const d = id.data;
+            for (let i = 0; i < d.length; i += 4) {
+                const v = Math.random() * 255 | 0;
+                d[i] = d[i + 1] = d[i + 2] = v;
+                d[i + 3] = 22;
+            }
+            oc2.putImageData(id, 0, 0);
+            offscreens.push(oc);
+        }
+
+        let frameIdx = 0, lastSwap = 0;
+        const SWAP_INTERVAL = 80;
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        function render(ts) {
+            if (ts - lastSwap > SWAP_INTERVAL) {
+                frameIdx = (frameIdx + 1) % FRAMES;
+                lastSwap = ts;
+            }
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const pat = ctx.createPattern(offscreens[frameIdx], 'repeat');
+            ctx.fillStyle = pat;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            requestAnimationFrame(render);
+        }
+        requestAnimationFrame(render);
+    })();
+    </script>
 </body>
 </html>

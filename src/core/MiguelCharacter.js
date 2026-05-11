@@ -6,19 +6,25 @@ class MiguelCharacter {
         this.maxHealth = 3;
         this.coins = 0;
         this.stars = 0;
-        this.currentState = MIGUEL_STATES.IDLE;
-        this.facingRight = true;
-        this.isGrounded = false;
-        this.canJump = true;
-        this.jumpCount = 0;
-        this.maxJumps = 2;
-        this.invincible = false;
+        this.currentState  = MIGUEL_STATES.IDLE;
+        this.facingRight   = true;
+        this.isGrounded    = false;
+        this.canJump       = true;
+        this.jumpCount     = 0;
+        this.maxJumps      = 2;
+        this.invincible    = false;
         this.invincibleTimer = 0;
-        this.actionCooldown = 0;
-        this.footstepTimer = 0;
-        this.isDead = false;
-        this.onGround = false;
+        this.actionCooldown  = 0;
+        this.footstepTimer   = 0;
+        this.isDead          = false;
+        this.onGround        = false;
         this._jumpJustPressed = false;
+
+        this._smElapsed   = 0;
+        this._smInterval  = 95;
+        this._smAngle     = 0;
+        this._smScaleOff  = 0;
+        this._smLastState = null;
 
         this._createSprite(x, y);
         this._setupKeys();
@@ -38,7 +44,6 @@ class MiguelCharacter {
 
         this.shadowGfx = s.add.graphics().setDepth(99);
 
-        // Particle trail container for running
         this.trailTimer = 0;
     }
 
@@ -55,15 +60,15 @@ class MiguelCharacter {
         this.keyDown  = s.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
         this.keyS     = s.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
 
-        this.touchLeft = false; this.touchRight = false;
-        this.touchJump = false; this.touchAction = false;
+        this.touchLeft   = false; this.touchRight  = false;
+        this.touchJump   = false; this.touchAction = false;
         this.touchCrouch = false;
         this._jumpKeyWasDown = false;
 
         const setupTouch = (id, prop) => {
             const el = document.getElementById(id);
             if (!el) return;
-            el.addEventListener('touchstart', e => { e.preventDefault(); this[prop] = true; }, { passive: false });
+            el.addEventListener('touchstart', e => { e.preventDefault(); this[prop] = true; },  { passive: false });
             el.addEventListener('touchend',   e => { e.preventDefault(); this[prop] = false; }, { passive: false });
             el.addEventListener('mousedown',  () => this[prop] = true);
             el.addEventListener('mouseup',    () => this[prop] = false);
@@ -83,7 +88,7 @@ class MiguelCharacter {
     isRewind()  { return this.keyR.isDown; }
 
     _jumpPressed() {
-        const down = this.cursors.up.isDown || this.keyW.isDown || this.keySpace.isDown || this.touchJump;
+        const down    = this.cursors.up.isDown || this.keyW.isDown || this.keySpace.isDown || this.touchJump;
         const wasDown = this._jumpKeyWasDown;
         this._jumpKeyWasDown = down;
         return down && !wasDown;
@@ -115,7 +120,7 @@ class MiguelCharacter {
         const movingLeft  = this.isLeft();
         const crouching   = this.isCrouch() && this.onGround;
         this.isRunning    = this.isRunHeld() && !crouching;
-        const speed = this.isRunning ? RUN_SPEED : WALK_SPEED;
+        const speed       = this.isRunning ? RUN_SPEED : WALK_SPEED;
 
         if (crouching) {
             this.body.setVelocityX(this.body.velocity.x * 0.7);
@@ -142,7 +147,6 @@ class MiguelCharacter {
             }
         }
 
-        // Running trail
         if (this.isRunning && this.onGround && this.trailTimer <= 0 && (movingLeft || movingRight)) {
             if (this.scene.particles) {
                 this.scene.particles.footstep(
@@ -154,7 +158,7 @@ class MiguelCharacter {
         }
 
         if (!crouching) this._updateState();
-        this._updateTexture();
+        this._applyStopMotion(delta);
         this._updateShadow();
 
         if ((movingRight || movingLeft) && this.onGround && this.footstepTimer <= 0) {
@@ -162,6 +166,43 @@ class MiguelCharacter {
                 this.scene.particles.footstep(this.sprite.x, this.sprite.y + 42);
             }
             this.footstepTimer = this.isRunning ? 0.15 : 0.25;
+        }
+    }
+
+    _applyStopMotion(delta) {
+        this._smElapsed += delta;
+        const tick = this._smElapsed >= this._smInterval;
+        if (tick) {
+            this._smElapsed -= this._smInterval;
+
+            this._smAngle    = (Math.random() - 0.5) * 2.8;
+            this._smScaleOff = (Math.random() - 0.5) * 0.008;
+
+            const newState = this.currentState;
+            if (newState !== this._smLastState) {
+                this._smLastState = newState;
+            }
+            const texMap = {
+                [MIGUEL_STATES.IDLE]:   'miguel_stand',
+                [MIGUEL_STATES.WALK]:   'miguel_walk',
+                [MIGUEL_STATES.RUN]:    'miguel_run',
+                [MIGUEL_STATES.JUMP]:   'miguel_jump',
+                [MIGUEL_STATES.FALL]:   'miguel_jump',
+                [MIGUEL_STATES.CROUCH]: 'miguel_crouch',
+                [MIGUEL_STATES.HURT]:   'miguel_stand',
+                [MIGUEL_STATES.WIN]:    'miguel_jump_punch',
+                [MIGUEL_STATES.ACTION]: 'miguel_drink',
+            };
+            const key = texMap[this.currentState] || 'miguel_stand';
+            if (this.sprite.texture && this.sprite.texture.key !== key) {
+                this.sprite.setTexture(key);
+            }
+        }
+
+        const baseScale = 0.18;
+        this.sprite.setScale(baseScale + this._smScaleOff);
+        if (!this.invincible) {
+            this.sprite.setAngle(this._smAngle);
         }
     }
 
@@ -177,29 +218,11 @@ class MiguelCharacter {
         }
     }
 
-    _updateTexture() {
-        const texMap = {
-            [MIGUEL_STATES.IDLE]:   'miguel_stand',
-            [MIGUEL_STATES.WALK]:   'miguel_walk',
-            [MIGUEL_STATES.RUN]:    'miguel_run',
-            [MIGUEL_STATES.JUMP]:   'miguel_jump',
-            [MIGUEL_STATES.FALL]:   'miguel_jump',
-            [MIGUEL_STATES.CROUCH]: 'miguel_crouch',
-            [MIGUEL_STATES.HURT]:   'miguel_stand',
-            [MIGUEL_STATES.WIN]:    'miguel_jump_punch',
-            [MIGUEL_STATES.ACTION]: 'miguel_drink',
-        };
-        const key = texMap[this.currentState] || 'miguel_stand';
-        if (this.sprite.texture && this.sprite.texture.key !== key) {
-            this.sprite.setTexture(key);
-        }
-    }
-
     _updateShadow() {
         if (!this.shadowGfx) return;
         this.shadowGfx.clear();
-        const alpha = this.onGround ? 0.3 : 0.15;
-        const scale = this.onGround ? 1 : 0.7;
+        const alpha = this.onGround ? 0.28 : 0.12;
+        const scale = this.onGround ? 1 : 0.65;
         this.shadowGfx.fillStyle(0x000000, alpha);
         this.shadowGfx.fillEllipse(this.sprite.x, this.sprite.y + 44, 50 * scale, 14 * scale);
     }
@@ -209,49 +232,45 @@ class MiguelCharacter {
         this.setState(MIGUEL_STATES.IDLE);
     }
 
-    setState(state) {
-        this.currentState = state;
-    }
+    setState(state) { this.currentState = state; }
 
     hurt() {
         if (this.invincible || this.isDead) return;
         this.health--;
-        this.invincible = true;
+        this.invincible      = true;
         this.invincibleTimer = 2.2;
         this.body.setVelocityY(-260);
         this.body.setVelocityX(this.facingRight ? -180 : 180);
         this.setState(MIGUEL_STATES.HURT);
         if (this.scene.particles) this.scene.particles.burst(this.sprite.x, this.sprite.y, 0xff4444, 12);
-        if (this.scene.cameras) {
-            this.scene.cameras.main.shake(200, 0.015);
-        }
+        if (this.scene.cameras)   this.scene.cameras.main.shake(220, 0.016);
         if (this.health <= 0) this.die();
     }
 
     die() {
         this.isDead = true;
         this.body.setVelocityY(-400);
-        this.scene.cameras.main.shake(300, 0.02);
+        this.scene.cameras.main.shake(300, 0.022);
         this.scene.time.delayedCall(1400, () => { this.scene.scene.restart(); });
     }
 
     collectCoin(value = 1) {
         this.coins += value;
         if (this.scene.particles) this.scene.particles.coins(this.sprite.x, this.sprite.y - 30, 4);
-        if (this.scene.hud) this.scene.hud.showCombo('+' + value + ' 🪙');
+        if (this.scene.hud)       this.scene.hud.showCombo('+' + value + ' 🪙');
     }
 
     collectStar() {
         this.stars = Math.min(3, this.stars + 1);
         if (this.scene.particles) this.scene.particles.stars(this.sprite.x, this.sprite.y - 40);
-        if (this.scene.hud) this.scene.hud.showCombo('⭐ Estrela!');
-        if (this.scene.cameras) this.scene.cameras.main.flash(400, 255, 235, 59, false);
+        if (this.scene.hud)       this.scene.hud.showCombo('⭐ Estrela!');
+        if (this.scene.cameras)   this.scene.cameras.main.flash(400, 255, 235, 59, false);
     }
 
     heal() {
         this.health = Math.min(this.maxHealth, this.health + 1);
         if (this.scene.particles) this.scene.particles.burst(this.sprite.x, this.sprite.y - 20, 0x4caf50, 12);
-        if (this.scene.hud) this.scene.hud.showCombo('❤️ +Vida!');
+        if (this.scene.hud)       this.scene.hud.showCombo('❤️ +Vida!');
     }
 
     get x() { return this.sprite ? this.sprite.x : this._x; }
@@ -260,7 +279,7 @@ class MiguelCharacter {
     set y(v) { this._y = v; if (this.sprite) this.sprite.y = v; }
 
     destroy() {
-        if (this.sprite) this.sprite.destroy();
+        if (this.sprite)    this.sprite.destroy();
         if (this.shadowGfx) this.shadowGfx.destroy();
     }
 }

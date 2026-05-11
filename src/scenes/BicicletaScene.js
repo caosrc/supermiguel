@@ -278,10 +278,18 @@ class BicicletaScene extends Phaser.Scene {
         this.started = false;
 
         const panel = this.add.graphics().setDepth(50);
-        panel.fillStyle(0x000000, 0.60);
+        panel.fillStyle(0x000000, 0.42);
+        panel.fillRoundedRect(W / 2 - 282, H / 2 - 162, 564, 324, 22);
+        panel.fillStyle(0x1e0e02, 0.97);
         panel.fillRoundedRect(W / 2 - 280, H / 2 - 160, 560, 320, 20);
-        panel.lineStyle(2, 0xffd700, 0.7);
+        for (let i = 0; i < 560; i += 20) {
+            panel.fillStyle(0xd4a050, 0.055);
+            panel.fillRect(W / 2 - 280 + i, H / 2 - 160, 10, 320);
+        }
+        panel.lineStyle(4, 0xd4a050, 0.9);
         panel.strokeRoundedRect(W / 2 - 280, H / 2 - 160, 560, 320, 20);
+        panel.lineStyle(1.5, 0xffd090, 0.28);
+        panel.strokeRoundedRect(W / 2 - 274, H / 2 - 154, 548, 308, 16);
 
         const mk = (x, y, txt, size, color) =>
             this.add.text(x, y, txt, { fontSize: size, fill: color, stroke: '#000', strokeThickness: 5, fontStyle: 'bold' }).setOrigin(0.5).setDepth(51);
@@ -594,17 +602,21 @@ class BicicletaScene extends Phaser.Scene {
     _updatePlayer(dt) {
         const { H } = this;
         this.stopTick += dt;
-        if (this.stopTick >= 0.083) {
-            this.stopTick  = 0;
-            this.jitterX   = (Math.random() - 0.5) * 2.5;
-            this.jitterY   = (Math.random() - 0.5) * 1.8;
+        if (this.stopTick >= 0.092) {
+            this.stopTick       = 0;
+            this.jitterX        = (Math.random() - 0.5) * 3.8;
+            this.jitterY        = (Math.random() - 0.5) * 2.6;
+            this._smScaleBike   = 0.44 + (Math.random() - 0.5) * 0.016;
+            this._smAngleBike   = (Math.random() - 0.5) * 2.2;
         }
         this.bikeSprite.x = this.playerX + this.jitterX;
         this.bikeSprite.y = H - 70 + this.jitterY;
-        if      (this.steerDir === -1) { this.bikeSprite.setTexture('bike_lado').setFlipX(true).setScale(0.44); }
-        else if (this.steerDir ===  1) { this.bikeSprite.setTexture('bike_lado').setFlipX(false).setScale(0.44); }
-        else                           { this.bikeSprite.setTexture('bike_costas').setFlipX(false).setScale(0.44); }
-        this.bikeSprite.setAngle(this.steerDir * 5 + this.jitterX * 0.24);
+        const sc = this._smScaleBike || 0.44;
+        const ja = this._smAngleBike || 0;
+        if      (this.steerDir === -1) { this.bikeSprite.setTexture('bike_lado').setFlipX(true).setScale(sc); }
+        else if (this.steerDir ===  1) { this.bikeSprite.setTexture('bike_lado').setFlipX(false).setScale(sc); }
+        else                           { this.bikeSprite.setTexture('bike_costas').setFlipX(false).setScale(sc); }
+        this.bikeSprite.setAngle(this.steerDir * 5.5 + this.jitterX * 0.28 + ja);
         this._drawShadow(this.playerX);
     }
 
